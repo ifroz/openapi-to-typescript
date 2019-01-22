@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017"
+    },
+  "include": [
+    "lib/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
