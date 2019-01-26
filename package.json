@@ -1,20 +1,41 @@
 {
   "name": "openapi-typescript",
   "version": "0.0.1",
-  "description": "Generate TypeScript type definitions based on an OpenAPI schema.",
+  "description": "Generate TypeScript type definitions based on an OpenAPI schema object.",
   "main": "dist/index.js",
   "author": "László Szűcs <laszlo.szucs@klarna.com>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf dist && tsc",
     "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^23.3.13",
     "@types/node": "^10.12.18",
     "jest": "^23.6.0",
+    "rimraf": "^2.6.3",
+    "source-map-support": "^0.5.10",
     "ts-jest": "^23.10.5",
     "ts-node": "^8.0.1",
     "typescript": "^3.2.4"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "moduleFileExtensions": ["ts", "js"],
+    "transform": {
+      "^.+\\.(ts)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/*.spec.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ],
+    "testEnvironment": "node"
   }
 }
