@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/jest": "^23.3.13",
     "@types/node": "^10.12.18",
+    "cz-conventional-changelog": "2.1.0",
     "jest": "^23.6.0",
     "rimraf": "^2.6.3",
     "source-map-support": "^0.5.10",
@@ -25,7 +26,10 @@
         "tsConfig": "tsconfig.json"
       }
     },
-    "moduleFileExtensions": ["ts", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "transform": {
       "^.+\\.(ts)$": "ts-jest"
     },
@@ -37,5 +41,10 @@
       "/dist/"
     ],
     "testEnvironment": "node"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
