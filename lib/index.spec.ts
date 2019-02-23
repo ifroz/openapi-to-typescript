@@ -9,6 +9,7 @@ describe('openapi-typescript', () => {
         },
         paths: {}
       }
+      itShouldGenerateValidTypingsFromSchema(schema)
       it('should respond nothing', async () => {
         const typings = await GenerateTypings(schema)
         expect(typings).toMatch(/^\s*$/)
@@ -18,7 +19,7 @@ describe('openapi-typescript', () => {
 
     describe('given the Petstore schema', () => {
       const schema = require('../fixtures/petstore.json')
-
+      itShouldGenerateValidTypingsFromSchema(schema)
       it('should output types for components.schemas ', async () => {
         const typings = await GenerateTypings(schema)
         expect(typings).toContain('export interface Pet')
@@ -28,7 +29,7 @@ describe('openapi-typescript', () => {
 
     describe('given the Petstore Expanded schema', () => {
       const schema = require('../fixtures/petstoreExpanded.json')
-
+      itShouldGenerateValidTypingsFromSchema(schema)
       it('should output types for components.schemas ', async () => {
         const typings = await GenerateTypings(schema)
         expect(typings).toContain('export type Pet = NewPet & {')
@@ -38,3 +39,10 @@ describe('openapi-typescript', () => {
 
   })
 })
+
+function itShouldGenerateValidTypingsFromSchema(schema:any) {
+  it('does not contain $magic$', async () => {
+    const typings = await GenerateTypings(schema)
+    expect(typings).not.toContain('$magic$')
+  })
+}
