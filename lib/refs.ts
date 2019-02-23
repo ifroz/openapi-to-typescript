@@ -1,7 +1,7 @@
 export class InternalRefRewriter {
   private readonly prefix:string
-  constructor(prefix = 'internal:/') {
-    this.prefix = prefix
+  constructor(scheme = 'internal') {
+    this.prefix = scheme + ':/'
   }
 
   public rewrite(root: any):void {

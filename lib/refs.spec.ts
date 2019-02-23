@@ -2,7 +2,7 @@ import { InternalRefRewriter } from './refs'
 
 describe('InternalRefRewriter', () => {
   it('should modify internal references ($ref-s)', () => {
-    const rewriter = new InternalRefRewriter('scheme:/')
+    const rewriter = new InternalRefRewriter('scheme')
     const root = {
       $ref: '#/some/path/selector',
     }
@@ -13,7 +13,7 @@ describe('InternalRefRewriter', () => {
   })
 
   it('should recursively rewrite any $refs', () => {
-    const rewriter = new InternalRefRewriter('scheme:/')
+    const rewriter = new InternalRefRewriter('scheme')
     const root = {
       nested: {
         deeply: {
