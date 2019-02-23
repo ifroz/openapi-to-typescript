@@ -23,22 +23,22 @@ export interface Error {
 export type FindPetsResult = (Pet)[];
 
 export interface FindPetsRequest {
-  tags: any
-  limit: any
+  tags: string[]
+  limit: integer
 }
 export type AddPetResult = Pet;
 
 export type FindPetByIdResult = Pet;
 
 export interface FindPetByIdRequest {
-  id: any
+  id: integer
 }
 export interface DeletePetResult {
   [k: string]: any;
 }
 
 export interface DeletePetRequest {
-  id: any
+  id: integer
 }"
 `;
 
@@ -61,7 +61,7 @@ export interface Error {
 export type ListPetsResult = Pets;
 
 export interface ListPetsRequest {
-  limit: any
+  limit: integer
 }
 export interface CreatePetsResult {
   [k: string]: any;
@@ -70,6 +70,6 @@ export interface CreatePetsResult {
 export type ShowPetByIdResult = Pets;
 
 export interface ShowPetByIdRequest {
-  petId: any
+  petId: string
 }"
 `;
