@@ -5,7 +5,7 @@ import { Route } from './route'
 
 type StringStore = { [key:string]:string }
 
-export const GenerateTypes = async (parsedOpenAPISchema:OpenAPISchema):Promise<string> => {
+export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema):Promise<string> => {
   const { paths, components: { schemas }} = parsedOpenAPISchema
   const typeStore:StringStore = {}
 

@@ -1,7 +1,7 @@
-import { GenerateTypes } from './index'
+import { GenerateTypings } from './index'
 
 describe('openapi-typescript', () => {
-  describe('GenerateTypes', () => {
+  describe('GenerateTypings', () => {
     describe('given an empty openapi schema', () => {
       const schema = {
         components: {
@@ -10,7 +10,7 @@ describe('openapi-typescript', () => {
         paths: {}
       }
       it('should respond nothing', async () => {
-        const typings = await GenerateTypes(schema)
+        const typings = await GenerateTypings(schema)
         expect(typings).toMatch(/^\s*$/)
         expect(typings).toEqual('')
       })
@@ -20,7 +20,7 @@ describe('openapi-typescript', () => {
       const schema = require('../fixtures/petstore.json')
 
       it('should output types for components.schemas ', async () => {
-        const typings = await GenerateTypes(schema)
+        const typings = await GenerateTypings(schema)
         expect(typings).toContain('export interface Pet')
         expect(typings).toContain('export type Pets = (Pet)[]')
       })
@@ -30,7 +30,7 @@ describe('openapi-typescript', () => {
       const schema = require('../fixtures/petstoreExpanded.json')
 
       it('should output types for components.schemas ', async () => {
-        const typings = await GenerateTypes(schema)
+        const typings = await GenerateTypings(schema)
         expect(typings).toContain('export type Pet = NewPet & {')
         // expect(typings).toMatch(/^\s*$/)
       })
