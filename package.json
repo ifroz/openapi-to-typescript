@@ -10,7 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "json-schema-to-typescript": "^6.1.0"
+    "json-schema-to-typescript": "^6.1.0",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@types/jest": "^23.3.13",
