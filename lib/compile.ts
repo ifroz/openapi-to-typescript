@@ -12,7 +12,7 @@ export const compileSchema = async (schema: OpenAPISchema, schemaName: string, s
         },
       },
     } as any,
-  })
+  }).then(removeMagic)
 
 const magicReader = (def: any, cb: any) => {
   const interfaceName = getSchemaNameByRef(def.url)
@@ -24,3 +24,6 @@ const getSchemaNameByRef = (url: string) => {
   const interfaceName = objPath[objPath.length - 1]
   return interfaceName
 }
+
+const removeMagic = (line: string):string => 
+  line.replace(/"\$magic\$[^"]+"/g, found => found.substr(8, found.length - 9))

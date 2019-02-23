@@ -15,11 +15,5 @@ export const GenerateTypes = async (parsedOpenAPISchema:OpenAPISchema):Promise<s
     typeStore[schemaName] = await compileSchema(schemas[schemaName], schemaName)
   }
 
-  return removeMagic(Object.values(typeStore).join('\n'))
-}
-
-function removeMagic(line: string):string {
-  return line.replace(
-    /"\$magic\$[^"]+"/g, 
-    found => found.substr(8, found.length - 9))
+  return Object.values(typeStore).join('\n')
 }
