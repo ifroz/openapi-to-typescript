@@ -1,14 +1,35 @@
-import { camelCase, get } from 'lodash'
+import { get, camelCase, upperFirst } from 'lodash'
+
+interface RouteParameter {
+  name: string
+}
+interface RouteObject {
+  operationId?: string
+  parameters: RouteParameter[]
+}
 
 export class Route {
-  public readonly route:any
+  public readonly route:RouteObject
   public readonly name:string
-  constructor(route: any, {pathName, method}:{
+  constructor(route: RouteObject, {pathName, method}:{
     pathName: string, 
     method: string
   }) {
     this.route = route
-    this.name = route.operationId || camelCase(`${method} ${pathName}`)
+    this.name = upperFirst(camelCase(route.operationId || `${method} ${pathName}`))
+  }
+
+  requestParametersTypeDefinition():string {
+    const lines: string[] = []
+    for (const param of this.route.parameters || []) {
+      lines.push(`  ${param.name}: any`)
+    }
+    const requestTypeName = `${this.name}Request`
+    return lines.length ? [
+      `export interface ${requestTypeName} {`,
+      ...lines,
+      `}`
+    ].join('\n') : ``
   }
 
   get responseSchema()  {

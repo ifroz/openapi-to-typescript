@@ -22,14 +22,24 @@ export interface Error {
 
 export type FindPetsResult = (Pet)[];
 
+export interface FindPetsRequest {
+  tags: any
+  limit: any
+}
 export type AddPetResult = Pet;
 
 export type FindPetByIdResult = Pet;
 
+export interface FindPetByIdRequest {
+  id: any
+}
 export interface DeletePetResult {
   [k: string]: any;
 }
-"
+
+export interface DeletePetRequest {
+  id: any
+}"
 `;
 
 exports[`openapi-typescript GenerateTypings given the Petstore schema should match snapshot 1`] = `
@@ -50,10 +60,16 @@ export interface Error {
 
 export type ListPetsResult = Pets;
 
+export interface ListPetsRequest {
+  limit: any
+}
 export interface CreatePetsResult {
   [k: string]: any;
 }
 
 export type ShowPetByIdResult = Pets;
-"
+
+export interface ShowPetByIdRequest {
+  petId: any
+}"
 `;

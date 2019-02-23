@@ -22,6 +22,8 @@ export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema):Promise
       const resultTypeName = `${route.name}Result`
       typeStore[resultTypeName] =
         await compileSchema(route.responseSchema, resultTypeName)
+      typeStore[`${resultTypeName}Request`] =
+        route.requestParametersTypeDefinition()
     }
   }
 
