@@ -21,8 +21,8 @@ const magicReader = (def: any, cb: any) => {
   cb(null, { type: 'string', enum: [`$magic$${interfaceName}`] })
 }
 
-const getSchemaNameByRef = (url: string) => {
-  const objPath = url.substr(11).split('/')
+const getSchemaNameByRef = (url: string, scheme = 'internal') => {
+  const objPath = url.substr(`${scheme}:/`.length).split('/')
   const interfaceName = objPath[objPath.length - 1]
   return interfaceName
 }
