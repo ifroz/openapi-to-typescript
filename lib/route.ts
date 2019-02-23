@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import { camelCase, get } from 'lodash'
 
 export class Route {
   public readonly route:any
@@ -8,7 +8,7 @@ export class Route {
     method: string
   }) {
     this.route = route
-    this.name = route.operationId || `${method} ${pathName} FIXME`
+    this.name = route.operationId || camelCase(`${method} ${pathName}`)
   }
 
   get responseSchema()  {
