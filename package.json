@@ -1,9 +1,9 @@
 {
-  "name": "openapi-typescript",
+  "name": "openapi-to-typescript",
   "version": "0.0.1",
-  "description": "Generate TypeScript type definitions based on an OpenAPI schema object.",
+  "description": "Generate TypeScript typings based on an OpenAPI schema object.",
   "main": "dist/index.js",
-  "author": "László Szűcs <laszlo.szucs@klarna.com>",
+  "author": "László Szűcs <ifrozen@gmail.com>",
   "license": "MIT",
   "scripts": {
     "build": "rimraf dist && tsc",
