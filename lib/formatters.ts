@@ -44,19 +44,21 @@ export class ResultTypeFormatter extends OutputFormatter {
   async toTypescript() {
     const definitions = this.getResponseSchemaDefinitions()
     const compilations = await Promise.all(
-      definitions.map(({ schema, statusCode }, index) => 
-        compileSchema(
-          schema, 
-          index === 0 ?
-            this.typeName() : 
-            this.typeNameWithSuffix(statusCode))))
+      definitions.map(({ schema, statusCode }, index) => {
+        const name = index === 0 ?
+          this.typeName() : 
+          this.typeNameWithSuffix(statusCode)
+        return schema ? 
+          compileSchema(schema, name) :
+          `export interface ${name} { /* unknown */ }`
+      }))
     return compilations.join(`\n`)
   }
 
   private getResponseSchemaDefinitions() {
     const responsesByStatusCode = get(this.routeDefinition.route, 'responses', {})
     const statusCodes = this.getStatusCodes(responsesByStatusCode)
-    return statusCodes.map(((statusCode, index) => {
+    return statusCodes.map((statusCode => {
       const key = `responses['${statusCode}'].content[${this.contentType}].schema`
       const schema = get(this.routeDefinition.route, key)
       return { schema, statusCode }
