@@ -12,6 +12,7 @@ describe('openapi-typescript', () => {
       it('should respond nothing', async () => {
         const typings = await GenerateTypes(schema)
         expect(typings).toMatch(/^\s*$/)
+        expect(typings).toEqual('')
       })
     })
 

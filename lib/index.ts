@@ -1,7 +1,7 @@
 import 'source-map-support/register'
 import { InternalRefRewriter } from './refs'
 import { compileSchema } from './compile'
-import { get } from 'lodash'
+import { Route } from './route'
 
 type StringStore = { [key:string]:string }
 
@@ -18,7 +18,7 @@ export const GenerateTypes = async (parsedOpenAPISchema:OpenAPISchema):Promise<s
 
   for (const pathName of Object.keys(paths)) {
     for (const method of Object.keys(paths[pathName])) {
-      const route = new Route(paths[pathName][method])
+      const route = new Route(paths[pathName][method], { pathName, method })
       const resultTypeName = `${route.name}Result`
       typeStore[resultTypeName] =
         await compileSchema(route.responseSchema, resultTypeName)
@@ -26,17 +26,4 @@ export const GenerateTypes = async (parsedOpenAPISchema:OpenAPISchema):Promise<s
   }
 
   return Object.values(typeStore).filter(t => t).join('\n')
-}
-
-class Route {
-  public readonly route:any
-  public readonly name:string
-  constructor(route: any) {
-    this.route = route
-    this.name = route.operationId || 'CannotNameThisAndNowWhat'
-  }
-
-  get responseSchema()  {
-    return get(this.route, "responses.200.content['application/json'].schema")
-  }
 }
