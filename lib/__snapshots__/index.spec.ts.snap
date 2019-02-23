@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`openapi-typescript GenerateTypings given an empty openapi schema should match snapshot 1`] = `""`;
+
+exports[`openapi-typescript GenerateTypings given the Petstore Expanded schema should match snapshot 1`] = `
+"export type Pet = NewPet & {
+  id: number;
+  [k: string]: any;
+};
+
+export interface NewPet {
+  name: string;
+  tag?: string;
+  [k: string]: any;
+}
+
+export interface Error {
+  code: number;
+  message: string;
+  [k: string]: any;
+}
+
+export type FindPetsResult = (Pet)[];
+
+export type AddPetResult = Pet;
+
+export type FindPetByIdResult = Pet;
+
+export interface DeletePetResult {
+  [k: string]: any;
+}
+"
+`;
+
+exports[`openapi-typescript GenerateTypings given the Petstore schema should match snapshot 1`] = `
+"export interface Pet {
+  id: number;
+  name: string;
+  tag?: string;
+  [k: string]: any;
+}
+
+export type Pets = (Pet)[];
+
+export interface Error {
+  code: number;
+  message: string;
+  [k: string]: any;
+}
+
+export type ListPetsResult = Pets;
+
+export interface CreatePetsResult {
+  [k: string]: any;
+}
+
+export type ShowPetByIdResult = Pets;
+"
+`;

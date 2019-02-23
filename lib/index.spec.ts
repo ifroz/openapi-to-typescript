@@ -33,7 +33,6 @@ describe('openapi-typescript', () => {
       it('should output types for components.schemas ', async () => {
         const typings = await GenerateTypings(schema)
         expect(typings).toContain('export type Pet = NewPet & {')
-        // expect(typings).toMatch(/^\s*$/)
       })
     })
 
@@ -41,6 +40,10 @@ describe('openapi-typescript', () => {
 })
 
 function itShouldGenerateValidTypingsFromSchema(schema:any) {
+  it('should match snapshot', async () => {
+    expect(await GenerateTypings(schema)).toMatchSnapshot()
+  })
+
   it('does not contain $magic$', async () => {
     const typings = await GenerateTypings(schema)
     expect(typings).not.toContain('$magic$')
