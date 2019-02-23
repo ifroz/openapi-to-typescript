@@ -1,8 +1,9 @@
 {
   "name": "openapi-to-typescript",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Generate TypeScript typings based on an OpenAPI schema object.",
   "main": "dist/index.js",
+  "files": ["dist/*.js"],
   "author": "László Szűcs <ifrozen@gmail.com>",
   "license": "MIT",
   "scripts": {
