@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`openapi-typescript GenerateTypings given an empty openapi schema should match snapshot 1`] = `""`;
+exports[`GenerateTypings given an empty openapi schema should match snapshot 1`] = `""`;
 
-exports[`openapi-typescript GenerateTypings given the Petstore Expanded schema should match snapshot 1`] = `
+exports[`GenerateTypings given the Petstore Expanded schema should match snapshot 1`] = `
 "export type Pet = NewPet & {
   id: number;
   [k: string]: any;
@@ -47,7 +47,7 @@ export interface DeletePetRequest {
 }"
 `;
 
-exports[`openapi-typescript GenerateTypings given the Petstore schema should match snapshot 1`] = `
+exports[`GenerateTypings given the Petstore schema should match snapshot 1`] = `
 "export interface Pet {
   id: number;
   name: string;
