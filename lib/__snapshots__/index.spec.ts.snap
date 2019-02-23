@@ -22,18 +22,26 @@ export interface Error {
 
 export type FindPetsResult = (Pet)[];
 
+export type FindPetsFallback = Error;
+
 export interface FindPetsRequest {
   tags: string[]
   limit: integer
 }
 export type AddPetResult = Pet;
 
+export type AddPetFallback = Error;
+
 export type FindPetByIdResult = Pet;
+
+export type FindPetByIdFallback = Error;
 
 export interface FindPetByIdRequest {
   id: integer
 }
 export interface DeletePetResult { /* unknown */ }
+export type DeletePetFallback = Error;
+
 export interface DeletePetRequest {
   id: integer
 }"
@@ -57,13 +65,19 @@ export interface Error {
 
 export type ListPetsResult = Pets;
 
+export type ListPetsFallback = Error;
+
 export interface ListPetsRequest {
   limit: integer
 }
 export interface CreatePetsResult { /* unknown */ }
+export type CreatePetsFallback = Error;
+
 export type ShowPetByIdResult = Pets;
 
 export interface ShowPetById204 { /* unknown */ }
+export type ShowPetByIdFallback = Error;
+
 export interface ShowPetByIdRequest {
   petId: string
 }"

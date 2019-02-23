@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import { get, camelCase, upperFirst } from 'lodash'
 
 import { RouteDefinition } from './route-definition'
 import { compileSchema, getSchemaName } from './compile'
@@ -38,7 +38,10 @@ export class ResultTypeFormatter extends OutputFormatter {
     return this.typeNameWithSuffix('Result')
   }
   private typeNameWithSuffix(suffix: number|string) {
-    return `${this.routeDefinition.name}${suffix}`
+    return upperFirst(camelCase(`
+      ${this.routeDefinition.name} 
+      ${suffix === 'default' ? 'fallback' : suffix.toString()}
+    `))
   }
 
   async toTypescript() {
@@ -66,10 +69,10 @@ export class ResultTypeFormatter extends OutputFormatter {
   }
 
   private getStatusCodes(responsesByStatusCode: any) {
-    const whitelist = ['default']
+    const whitelist: (number|string)[] = ['default']
     return Object.keys(responsesByStatusCode)
       .map(n => whitelist.includes(n) ? n : parseInt(n))
-      .filter(n => n >= 200 && n < 400)
+      .filter(n => whitelist.includes(n) || n >= 200 && n < 400)
       .sort()
   }
 }
