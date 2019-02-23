@@ -69,6 +69,10 @@ export interface CreatePetsResult {
 
 export type ShowPetByIdResult = Pets;
 
+export interface ShowPetById204 {
+  [k: string]: any;
+}
+
 export interface ShowPetByIdRequest {
   petId: string
 }"

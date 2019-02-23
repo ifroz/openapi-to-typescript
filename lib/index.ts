@@ -27,7 +27,7 @@ export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema, {
       const route = new RouteDefinition(paths[pathName][method], { pathName, method })
       for (const Formatter of outputStrategies) {
         const formatted = new Formatter(route)
-        typeStore[formatted.typeName] = await formatted.toTypescript()
+        typeStore[formatted.typeName()] = await formatted.toTypescript()
       }
     }
   }

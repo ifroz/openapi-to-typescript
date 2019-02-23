@@ -15,15 +15,12 @@ interface RouteObject {
 export class RouteDefinition {
   public readonly route:RouteObject
   public readonly name:string
-  public readonly requestTypeName:string
   constructor(route: RouteObject, {pathName, method}:{
     pathName: string, 
     method: string
   }) {
     this.route = route
     this.route.parameters = route.parameters || []
-
     this.name = upperFirst(camelCase(route.operationId || `${method} ${pathName}`))
-    this.requestTypeName = `${this.name}Request`
   }
 }

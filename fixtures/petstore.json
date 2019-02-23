@@ -115,6 +115,9 @@
               }
             }
           },
+          "204": {
+            "description": "Pet does not exist"
+          },
           "default": {
             "description": "unexpected error",
             "content": {
