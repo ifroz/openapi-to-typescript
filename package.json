@@ -1,6 +1,6 @@
 {
   "name": "openapi-to-typescript",
-  "version": "0.0.2",
+  "version": "0.0.0-semantically-released",
   "description": "Generate TypeScript typings based on an OpenAPI schema object.",
   "main": "dist/index.js",
   "files": [
