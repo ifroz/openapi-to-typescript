@@ -20,31 +20,31 @@ export interface Error {
   [k: string]: any;
 }
 
-export type FindPetsResult = (Pet)[];
-
-export type FindPetsFallback = Error;
-
 export interface FindPetsRequest {
   tags: string[]
   limit: integer
 }
+export type FindPetsResult = (Pet)[];
+
+export type FindPetsFallback = Error;
+
 export type AddPetResult = Pet;
 
 export type AddPetFallback = Error;
 
+export interface FindPetByIdRequest {
+  id: integer
+}
 export type FindPetByIdResult = Pet;
 
 export type FindPetByIdFallback = Error;
 
-export interface FindPetByIdRequest {
+export interface DeletePetRequest {
   id: integer
 }
 export interface DeletePetResult { /* unknown */ }
 export type DeletePetFallback = Error;
-
-export interface DeletePetRequest {
-  id: integer
-}"
+"
 `;
 
 exports[`GenerateTypings given the Petstore schema should match snapshot 1`] = `
@@ -63,22 +63,22 @@ export interface Error {
   [k: string]: any;
 }
 
+export interface ListPetsRequest {
+  limit: integer
+}
 export type ListPetsResult = Pets;
 
 export type ListPetsFallback = Error;
 
-export interface ListPetsRequest {
-  limit: integer
-}
 export interface CreatePetsResult { /* unknown */ }
 export type CreatePetsFallback = Error;
 
+export interface ShowPetByIdRequest {
+  petId: string
+}
 export type ShowPetByIdResult = Pets;
 
 export interface ShowPetById204 { /* unknown */ }
 export type ShowPetByIdFallback = Error;
-
-export interface ShowPetByIdRequest {
-  petId: string
-}"
+"
 `;
