@@ -19,6 +19,6 @@ Generate TypeScript typings based on az OpenAPI3 schema definition.
 const { GenerateTypings } = require('openapi-to-typescript')
 
 const generatedTypescript = await GenerateTypings(openapiSchema)
-fs.writeFileSync('out.d.ts', generatedTypescript)
+fs.writeFileSync('out.d.ts', generatedTypescript.toString())
 
 ```

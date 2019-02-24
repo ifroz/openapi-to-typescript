@@ -5,7 +5,7 @@ import { InternalRefRewriter } from './refs'
 import { Operation } from './operation'
 import { defaultOperationFormatters, SchemaFormatter } from './formatters'
 
-export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema):Promise<string> => {
+export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema):Promise<Store<string>> => {
   const { paths, components: { schemas }} = parsedOpenAPISchema
   const typeStore = new Store<string>()
 
@@ -25,5 +25,5 @@ export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema):Promise
     }
   }
 
-  return typeStore.toString()
+  return typeStore
 }
