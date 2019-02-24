@@ -26,8 +26,7 @@ export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema, {
     for (const method of Object.keys(paths[pathName])) {
       const operation = new Operation(paths[pathName][method], { pathName, method })
       for (const Formatter of formatters) {
-        const formatted = new Formatter(operation)
-        typeStore[formatted.typeName()] = await formatted.toTypescript()
+        Object.assign(typeStore, await new Formatter(operation).render())
       }
     }
   }

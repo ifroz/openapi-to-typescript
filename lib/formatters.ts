@@ -1,7 +1,8 @@
 import { get, camelCase, upperFirst } from 'lodash'
 
-import { Operation } from './operation'
+import { Operation, RouteParameter } from './operation'
 import { compileSchema, getSchemaName } from './compile'
+import { JSONSchema } from 'json-schema-ref-parser';
 
 export abstract class OutputFormatter {
   protected readonly operation: Operation
@@ -12,58 +13,55 @@ export abstract class OutputFormatter {
     this.contentType = (contentType || 'application/json').toString()
   }
 
-  abstract typeName(): string
-  abstract async toTypescript(): Promise<string>
+  abstract async render():Promise<{[k: string]: string}>
 }
 
 export class RequestTypeFormatter extends OutputFormatter {
-  typeName() {
-    return `${this.operation.name}Request`
-  }
-
-  async toTypescript() {
+  async render():Promise<{[k: string]: string}> {
+    const typeName = `${this.operation.name}Request`
     const parameters = this.operation.route.parameters || []
-    return parameters.length ? [
-      `export interface ${this.typeName()} {`,
+    return parameters.length ? {
+      [typeName]: await this.toTypescriptInterface(typeName, parameters)
+    } : {}
+  }
+  
+  async toTypescriptInterface(typeName:string, parameters:RouteParameter[]) {
+    return [
+      `export interface ${typeName} {`,
         ...parameters.map(param => 
           `  ${param.name}: ${getSchemaName(param.schema, param.name)}`),
       `}`
-    ].join('\n') : ``
+    ].join('\n')
   }
 }
 
 export class ResultTypeFormatter extends OutputFormatter {
-  typeName() {
-    return this.typeNameWithSuffix('Result')
-  }
-  private typeNameWithSuffix(suffix: number|string) {
-    return upperFirst(camelCase(`
-      ${this.operation.name} 
-      ${suffix === 'default' ? 'fallback' : suffix.toString()}
-    `))
-  }
-
-  async toTypescript() {
+  async render():Promise<{[k: string]: string}> {
     const definitions = this.getResponseSchemaDefinitions()
     const compilations = await Promise.all(
-      definitions.map(({ schema, statusCode }, index) => {
-        const name = index === 0 ?
-          this.typeName() : 
-          this.typeNameWithSuffix(statusCode)
-        return schema ? 
-          compileSchema(schema, name) :
-          `export interface ${name} { /* unknown */ }`
-      }))
-    return compilations.join(`\n`)
+      definitions.map(({ schema, typeName }) => 
+        this.compileDefinition(typeName, schema))
+    )
+    return definitions.reduce((typeDefs, definition, index) => 
+      Object.assign(typeDefs, {
+        [definition.typeName]: compilations[index]
+      }), {})
+  }
+
+  private async compileDefinition(typeName:string, schema:JSONSchema) {
+    return schema ?
+      compileSchema(schema, typeName) :
+      `export interface ${typeName} { /* unknown */ }`
   }
 
   private getResponseSchemaDefinitions() {
     const responsesByStatusCode = get(this.operation.route, 'responses', {})
     const statusCodes = this.getStatusCodes(responsesByStatusCode)
-    return statusCodes.map((statusCode => {
+    return statusCodes.map(((statusCode, index) => {
       const key = `responses['${statusCode}'].content[${this.contentType}].schema`
+      const typeName = this.typeNameFor(statusCode, index)
       const schema = get(this.operation.route, key)
-      return { schema, statusCode }
+      return { schema, statusCode, typeName }
     }))
   }
 
@@ -73,5 +71,13 @@ export class ResultTypeFormatter extends OutputFormatter {
       .map(n => whitelist.includes(n) ? n : parseInt(n))
       .filter(n => whitelist.includes(n) || n >= 200 && n < 400)
       .sort()
+  }
+
+  private typeNameFor(suffix: number|string, index = 0) {
+    if (index === 0) suffix = 'Result'
+    return upperFirst(camelCase(`
+      ${this.operation.name} 
+      ${suffix === 'default' ? 'fallback' : suffix.toString()}
+    `))
   }
 }

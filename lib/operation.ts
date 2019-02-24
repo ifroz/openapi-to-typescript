@@ -1,7 +1,7 @@
 import { camelCase, upperFirst } from 'lodash'
 import { JSONSchema } from 'json-schema-ref-parser';
 
-interface RouteParameter {
+export interface RouteParameter {
   name: string
   schema: JSONSchema
 }
