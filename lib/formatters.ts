@@ -1,15 +1,15 @@
 import { get, camelCase, upperFirst } from 'lodash'
 
-import { RouteDefinition } from './route-definition'
+import { Operation } from './operation'
 import { compileSchema, getSchemaName } from './compile'
 import { compile } from 'json-schema-to-typescript';
 
 export abstract class OutputFormatter {
-  protected readonly routeDefinition: RouteDefinition
+  protected readonly operation: Operation
   public readonly contentType: string
 
-  constructor(route: RouteDefinition, { contentType }: any = {}) {
-    this.routeDefinition = route
+  constructor(operation: Operation, { contentType }: any = {}) {
+    this.operation = operation
     this.contentType = (contentType || 'application/json').toString()
   }
 
@@ -19,11 +19,11 @@ export abstract class OutputFormatter {
 
 export class RequestTypeFormatter extends OutputFormatter {
   typeName() {
-    return `${this.routeDefinition.name}Request`
+    return `${this.operation.name}Request`
   }
 
   async toTypescript() {
-    const parameters = this.routeDefinition.route.parameters || []
+    const parameters = this.operation.route.parameters || []
     return parameters.length ? [
       `export interface ${this.typeName()} {`,
         ...parameters.map(param => 
@@ -39,7 +39,7 @@ export class ResultTypeFormatter extends OutputFormatter {
   }
   private typeNameWithSuffix(suffix: number|string) {
     return upperFirst(camelCase(`
-      ${this.routeDefinition.name} 
+      ${this.operation.name} 
       ${suffix === 'default' ? 'fallback' : suffix.toString()}
     `))
   }
@@ -59,11 +59,11 @@ export class ResultTypeFormatter extends OutputFormatter {
   }
 
   private getResponseSchemaDefinitions() {
-    const responsesByStatusCode = get(this.routeDefinition.route, 'responses', {})
+    const responsesByStatusCode = get(this.operation.route, 'responses', {})
     const statusCodes = this.getStatusCodes(responsesByStatusCode)
     return statusCodes.map((statusCode => {
       const key = `responses['${statusCode}'].content[${this.contentType}].schema`
-      const schema = get(this.routeDefinition.route, key)
+      const schema = get(this.operation.route, key)
       return { schema, statusCode }
     }))
   }

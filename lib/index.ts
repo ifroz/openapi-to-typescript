@@ -1,7 +1,7 @@
 import 'source-map-support/register'
 import { InternalRefRewriter } from './refs'
 import { compileSchema } from './compile'
-import { RouteDefinition } from './route-definition'
+import { Operation } from './operation'
 import { RequestTypeFormatter, ResultTypeFormatter } from './formatters'
 
 type StringStore = { [key:string]:string }
@@ -24,9 +24,9 @@ export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema, {
 
   for (const pathName of Object.keys(paths)) {
     for (const method of Object.keys(paths[pathName])) {
-      const route = new RouteDefinition(paths[pathName][method], { pathName, method })
+      const operation = new Operation(paths[pathName][method], { pathName, method })
       for (const Formatter of outputStrategies) {
-        const formatted = new Formatter(route)
+        const formatted = new Formatter(operation)
         typeStore[formatted.typeName()] = await formatted.toTypescript()
       }
     }

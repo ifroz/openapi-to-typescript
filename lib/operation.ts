@@ -1,7 +1,5 @@
-import { get, camelCase, upperFirst } from 'lodash'
+import { camelCase, upperFirst } from 'lodash'
 import { JSONSchema } from 'json-schema-ref-parser';
-
-import { getSchemaName, compileSchema } from './compile'
 
 interface RouteParameter {
   name: string
@@ -12,7 +10,7 @@ interface RouteObject {
   parameters: RouteParameter[]
 }
 
-export class RouteDefinition {
+export class Operation {
   public readonly route:RouteObject
   public readonly name:string
   constructor(route: RouteObject, {pathName, method}:{
