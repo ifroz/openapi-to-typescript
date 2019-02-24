@@ -2,16 +2,11 @@ import 'source-map-support/register'
 import { InternalRefRewriter } from './refs'
 import { compileSchema } from './compile'
 import { Operation } from './operation'
-import { RequestTypeFormatter, ResultTypeFormatter } from './formatters'
+import formatters from './formatters'
 
 type StringStore = { [key:string]:string }
 
-export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema, {
-  formatters = [
-    RequestTypeFormatter,
-    ResultTypeFormatter,
-  ]
-}: any = {}):Promise<string> => {
+export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema):Promise<string> => {
   const { paths, components: { schemas }} = parsedOpenAPISchema
   const typeStore:StringStore = {}
 

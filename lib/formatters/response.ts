@@ -1,41 +1,12 @@
+import { JSONSchema } from 'json-schema-ref-parser'
 import { get, camelCase, upperFirst } from 'lodash'
 
-import { Operation, RouteParameter } from './operation'
-import { compileSchema, getSchemaName } from './compile'
-import { JSONSchema } from 'json-schema-ref-parser';
+import { OperationFormatter } from '../formatter'
+import { compileSchema } from '../compile'
 
-export abstract class OutputFormatter {
-  protected readonly operation: Operation
-  public readonly contentType: string
+export class ResultTypeFormatter extends OperationFormatter {
+  public readonly contentType: string = 'application/json'
 
-  constructor(operation: Operation, { contentType }: any = {}) {
-    this.operation = operation
-    this.contentType = (contentType || 'application/json').toString()
-  }
-
-  abstract async render():Promise<{[k: string]: string}>
-}
-
-export class RequestTypeFormatter extends OutputFormatter {
-  async render():Promise<{[k: string]: string}> {
-    const typeName = `${this.operation.name}Request`
-    const parameters = this.operation.route.parameters || []
-    return parameters.length ? {
-      [typeName]: await this.toTypescriptInterface(typeName, parameters)
-    } : {}
-  }
-  
-  async toTypescriptInterface(typeName:string, parameters:RouteParameter[]) {
-    return [
-      `export interface ${typeName} {`,
-        ...parameters.map(param => 
-          `  ${param.name}: ${getSchemaName(param.schema, param.name)}`),
-      `}`
-    ].join('\n')
-  }
-}
-
-export class ResultTypeFormatter extends OutputFormatter {
   async render():Promise<{[k: string]: string}> {
     const definitions = this.getResponseSchemaDefinitions()
     const compilations = await Promise.all(
