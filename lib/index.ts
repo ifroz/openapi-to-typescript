@@ -7,9 +7,9 @@ import { RequestTypeFormatter, ResultTypeFormatter } from './formatters'
 type StringStore = { [key:string]:string }
 
 export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema, {
-  outputStrategies = [
-    ResultTypeFormatter,
+  formatters = [
     RequestTypeFormatter,
+    ResultTypeFormatter,
   ]
 }: any = {}):Promise<string> => {
   const { paths, components: { schemas }} = parsedOpenAPISchema
@@ -25,7 +25,7 @@ export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema, {
   for (const pathName of Object.keys(paths)) {
     for (const method of Object.keys(paths[pathName])) {
       const operation = new Operation(paths[pathName][method], { pathName, method })
-      for (const Formatter of outputStrategies) {
+      for (const Formatter of formatters) {
         const formatted = new Formatter(operation)
         typeStore[formatted.typeName()] = await formatted.toTypescript()
       }

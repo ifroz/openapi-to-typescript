@@ -2,7 +2,6 @@ import { get, camelCase, upperFirst } from 'lodash'
 
 import { Operation } from './operation'
 import { compileSchema, getSchemaName } from './compile'
-import { compile } from 'json-schema-to-typescript';
 
 export abstract class OutputFormatter {
   protected readonly operation: Operation
