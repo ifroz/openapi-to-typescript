@@ -40,7 +40,7 @@ export class ResultTypeFormatter extends OutputFormatter {
     const definitions = this.getResponseSchemaDefinitions()
     const compilations = await Promise.all(
       definitions.map(({ schema, typeName }) => 
-        this.compileDefinition(typeName, schema))
+        this.compileDefinition(schema, typeName))
     )
     return definitions.reduce((typeDefs, definition, index) => 
       Object.assign(typeDefs, {
@@ -48,18 +48,18 @@ export class ResultTypeFormatter extends OutputFormatter {
       }), {})
   }
 
-  private async compileDefinition(typeName:string, schema:JSONSchema) {
+  private async compileDefinition(schema:JSONSchema, typeName:string) {
     return schema ?
       compileSchema(schema, typeName) :
       `export interface ${typeName} { /* unknown */ }`
   }
 
-  private getResponseSchemaDefinitions() {
+  private getResponseSchemaDefinitions():ResponseSchemaDefinition[] {
     const responsesByStatusCode = get(this.operation.route, 'responses', {})
     const statusCodes = this.getStatusCodes(responsesByStatusCode)
-    return statusCodes.map(((statusCode, index) => {
+    return statusCodes.map(((statusCode, index):ResponseSchemaDefinition => {
       const key = `responses['${statusCode}'].content[${this.contentType}].schema`
-      const typeName = this.typeNameFor(statusCode, index)
+      const typeName = this.typeNameFor(index === 0 ? 'Result' : statusCode)
       const schema = get(this.operation.route, key)
       return { schema, statusCode, typeName }
     }))
@@ -73,11 +73,16 @@ export class ResultTypeFormatter extends OutputFormatter {
       .sort()
   }
 
-  private typeNameFor(suffix: number|string, index = 0) {
-    if (index === 0) suffix = 'Result'
+  private typeNameFor(suffix: number|string) {
     return upperFirst(camelCase(`
       ${this.operation.name} 
       ${suffix === 'default' ? 'fallback' : suffix.toString()}
     `))
   }
+}
+
+interface ResponseSchemaDefinition {
+  schema: JSONSchema,
+  typeName: string,
+  statusCode: number|string|'default'
 }
