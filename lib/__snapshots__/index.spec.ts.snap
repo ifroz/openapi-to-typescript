@@ -22,7 +22,7 @@ export interface Error {
 
 export interface FindPetsRequest {
   tags: string[]
-  limit: integer
+  limit: number
 }
 export type FindPetsResult = (Pet)[];
 
@@ -33,14 +33,14 @@ export type AddPetResult = Pet;
 export type AddPetFallback = Error;
 
 export interface FindPetByIdRequest {
-  id: integer
+  id: number
 }
 export type FindPetByIdResult = Pet;
 
 export type FindPetByIdFallback = Error;
 
 export interface DeletePetRequest {
-  id: integer
+  id: number
 }
 export interface DeletePetResult { /* unknown */ }
 export type DeletePetFallback = Error;
@@ -64,7 +64,7 @@ export interface Error {
 }
 
 export interface ListPetsRequest {
-  limit: integer
+  limit: number
 }
 export type ListPetsResult = Pets;
 
