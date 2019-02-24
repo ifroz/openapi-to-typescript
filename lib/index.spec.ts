@@ -1,4 +1,5 @@
 import { GenerateTypings } from './index'
+import execa from 'execa'
 
 describe('GenerateTypings', () => {
   describe('given an empty openapi schema', () => {
@@ -44,5 +45,11 @@ function itShouldGenerateValidTypingsFromSchema(schema:any) {
   it('does not contain $magic$', async () => {
     const typeStore = await GenerateTypings(schema)
     expect(typeStore.toString()).not.toContain('$magic$')
+  })
+
+  it('should evaluate', async () => {
+    const typeStore = await GenerateTypings(schema)
+    const typeDefs = typeStore.toString()
+    if (typeDefs.length) await execa.stdout('ts-node', ['--eval', typeDefs])
   })
 }

@@ -39,6 +39,8 @@ export function getSchemaName(schema: JSONSchema, schemaName: string) {
       return schemaName
     case 'array':
       return get(schema.items, 'type', 'any') + '[]'
+    case 'integer':
+      return 'number'
     default: 
       return schema.type || 'never'
   }
