@@ -1,6 +1,6 @@
 import { Operation } from './operation'
 
-abstract class Formatter {
+export abstract class Formatter {
   abstract async render():Promise<{[k: string]: string}>
 }
 
