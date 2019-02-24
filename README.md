@@ -22,3 +22,13 @@ const generatedTypescript = await GenerateTypings(openapiSchema)
 fs.writeFileSync('out.d.ts', generatedTypescript.toString())
 
 ```
+
+### For development
+
+```javascript
+const { GenerateTypings } = require('./dist/index')
+
+GenerateTypings(require('./fixtures/petstore.json')).then((typeStore) => {
+  fs.writeFileSync('./dist/out.d.ts', typeStore.toString())
+})
+```
