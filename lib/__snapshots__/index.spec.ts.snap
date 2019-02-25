@@ -2,6 +2,57 @@
 
 exports[`GenerateTypings given an empty openapi schema should match snapshot 1`] = `""`;
 
+exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match snapshot 1`] = `
+"export type Pet = NewPet & {
+  id: number;
+  [k: string]: any;
+};
+
+export interface NewPet {
+  name: string;
+  tag?: string;
+  [k: string]: any;
+}
+
+export interface Error {
+  code: number;
+  message: string;
+  [k: string]: any;
+}
+
+export interface FindPetsRequest {
+  tags: string[]
+  limit: number
+}
+export type FindPetsResult = (Pet)[];
+
+export type FindPetsFallback = Error;
+
+export type FindPets = (payload: FindPetsRequest) => Promise<FindPetsResult>;
+export interface AddPetRequest {
+}
+export type AddPetResult = Pet;
+
+export type AddPetFallback = Error;
+
+export type AddPet = (payload: AddPetRequest) => Promise<AddPetResult>;
+export interface FindPetByIdRequest {
+  id: number
+}
+export type FindPetByIdResult = Pet;
+
+export type FindPetByIdFallback = Error;
+
+export type FindPetById = (payload: FindPetByIdRequest) => Promise<FindPetByIdResult>;
+export interface DeletePetRequest {
+  id: number
+}
+export interface DeletePetResult { /* unknown */ }
+export type DeletePetFallback = Error;
+
+export type DeletePet = (payload: DeletePetRequest) => Promise<DeletePetResult>;"
+`;
+
 exports[`GenerateTypings given the Petstore Expanded schema should match snapshot 1`] = `
 "export type Pet = NewPet & {
   id: number;
@@ -28,6 +79,8 @@ export type FindPetsResult = (Pet)[];
 
 export type FindPetsFallback = Error;
 
+export interface AddPetRequest {
+}
 export type AddPetResult = Pet;
 
 export type AddPetFallback = Error;
@@ -70,6 +123,8 @@ export type ListPetsResult = Pets;
 
 export type ListPetsFallback = Error;
 
+export interface CreatePetsRequest {
+}
 export interface CreatePetsResult { /* unknown */ }
 export type CreatePetsFallback = Error;
 

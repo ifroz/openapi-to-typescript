@@ -1,5 +1,6 @@
-import { GenerateTypings } from './index'
+import { GenerateTypings, GenerateTypingsOptions } from './index'
 import execa from 'execa'
+import { FetchClientFormatter } from './formatters';
 
 describe('GenerateTypings', () => {
   describe('given an empty openapi schema', () => {
@@ -42,21 +43,30 @@ describe('GenerateTypings', () => {
       expect(typeObject).toHaveProperty('FindPetByIdResult', 'export type FindPetByIdResult = Pet;\n')
       expect(typeObject).toHaveProperty('FindPetByIdFallback', 'export type FindPetByIdFallback = Error;\n')
     })
+
+    describe('FetchClientFormatter', () => {
+      const options = {
+        operationFormatters: [FetchClientFormatter]
+      }
+      itShouldGenerateValidTypingsFromSchema(schema, options)
+    })  
   })
 })
 
-function itShouldGenerateValidTypingsFromSchema(schema:any) {
+
+
+function itShouldGenerateValidTypingsFromSchema(schema:any, options?:GenerateTypingsOptions) {
   it('should match snapshot', async () => {
-    expect((await GenerateTypings(schema)).toString()).toMatchSnapshot()
+    expect((await GenerateTypings(schema, options)).toString()).toMatchSnapshot()
   })
 
   it('does not contain $magic$', async () => {
-    const typeStore = await GenerateTypings(schema)
+    const typeStore = await GenerateTypings(schema, options)
     expect(typeStore.toString()).not.toContain('$magic$')
   })
 
   it('should evaluate', async () => {
-    const typeStore = await GenerateTypings(schema)
+    const typeStore = await GenerateTypings(schema, options)
     const typeDefs = typeStore.toString()
     if (typeDefs.length) await execa.stdout('ts-node', ['--eval', typeDefs])
   })
