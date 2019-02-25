@@ -6,6 +6,9 @@
   "files": [
     "dist/**/*.js"
   ],
+  "repository": {
+    "url": "https://github.com/ifroz/openapi-to-typescript"
+  },
   "author": "László Szűcs <ifrozen@gmail.com>",
   "license": "MIT",
   "scripts": {
