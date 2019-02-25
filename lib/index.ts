@@ -28,8 +28,8 @@ export const GenerateTypings = async (
   for (const pathName of Object.keys(paths)) {
     for (const method of Object.keys(paths[pathName])) {
       const operation = new Operation(paths[pathName][method], { pathName, method })
-      for (const Formatter of [...defaultOperationFormatters, ...operationFormatters]) {
-        typeStore.assign(await new Formatter(operation).render())
+      for (const OperationFormatter of [...defaultOperationFormatters, ...operationFormatters]) {
+        typeStore.assign(await new OperationFormatter(operation).render())
       }
     }
   }
