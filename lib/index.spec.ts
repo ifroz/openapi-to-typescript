@@ -20,7 +20,7 @@ describe('GenerateTypings', () => {
   describe('given the Petstore schema', () => {
     const schema = require('../fixtures/petstore.json')
     itShouldGenerateValidTypingsFromSchema(schema)
-    it('should output types for components.schemas ', async () => {
+    it('should output types for components.schemas', async () => {
       const typeStore = await GenerateTypings(schema)
       expect(typeStore.toString()).toContain('export interface Pet')
       expect(typeStore.toString()).toContain('export type Pets = (Pet)[]')
@@ -30,9 +30,17 @@ describe('GenerateTypings', () => {
   describe('given the Petstore Expanded schema', () => {
     const schema = require('../fixtures/petstoreExpanded.json')
     itShouldGenerateValidTypingsFromSchema(schema)
-    it('should output types for components.schemas ', async () => {
+    it('should output types for components.schemas', async () => {
       const typeStore = await GenerateTypings(schema)
       expect(typeStore.toString()).toContain('export type Pet = NewPet & {')
+      expect(typeStore.toObject()).toHaveProperty('NewPet')
+    })
+    it('should output types for paths', async () => {
+      const typeStore = await GenerateTypings(schema)
+      const typeObject = typeStore.toObject()
+      expect(typeObject).toHaveProperty('FindPetByIdRequest')
+      expect(typeObject).toHaveProperty('FindPetByIdResult', 'export type FindPetByIdResult = Pet;\n')
+      expect(typeObject).toHaveProperty('FindPetByIdFallback', 'export type FindPetByIdFallback = Error;\n')
     })
   })
 })
