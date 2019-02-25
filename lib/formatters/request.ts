@@ -6,9 +6,9 @@ export class RequestTypeFormatter extends OperationFormatter {
   async render():Promise<{[k: string]: string}> {
     const typeName = `${this.operation.name}Request`
     const parameters = this.operation.route.parameters || []
-    return parameters.length ? {
+    return {
       [typeName]: await this.toTypescriptInterface(typeName, parameters)
-    } : {}
+    }
   }
   
   async toTypescriptInterface(typeName:string, parameters:RouteParameter[]) {
