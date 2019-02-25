@@ -6,7 +6,14 @@ import { InternalRefRewriter } from './refs'
 import { Operation } from './operation'
 import { defaultOperationFormatters, SchemaFormatter } from './formatters'
 
-export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema):Promise<Store<string>> => {
+export interface GenerateTypingsOptions {
+  operationFormatters?: any[]
+}
+
+export const GenerateTypings = async (
+  parsedOpenAPISchema:OpenAPISchema, 
+  { operationFormatters = [] }: GenerateTypingsOptions = {}
+):Promise<Store<string>> => {
   const schemas = merge({}, parsedOpenAPISchema.components.schemas)
   const paths = merge({}, parsedOpenAPISchema.paths)
   const typeStore = new Store<string>()
@@ -21,7 +28,7 @@ export const GenerateTypings = async (parsedOpenAPISchema:OpenAPISchema):Promise
   for (const pathName of Object.keys(paths)) {
     for (const method of Object.keys(paths[pathName])) {
       const operation = new Operation(paths[pathName][method], { pathName, method })
-      for (const Formatter of defaultOperationFormatters) {
+      for (const Formatter of [...defaultOperationFormatters, ...operationFormatters]) {
         typeStore.assign(await new Formatter(operation).render())
       }
     }
