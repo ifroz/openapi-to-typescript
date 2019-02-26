@@ -22,7 +22,7 @@ export class ResultTypeFormatter extends OperationFormatter {
   private async compileDefinition(schema:JSONSchema, typeName:string) {
     return schema ?
       compileSchema(schema, typeName) :
-      `export interface ${typeName} { /* unknown */ }`
+      `export type ${typeName} = any`
   }
 
   private getResponseSchemaDefinitions():ResponseSchemaDefinition[] {

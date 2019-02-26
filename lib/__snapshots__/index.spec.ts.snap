@@ -47,7 +47,7 @@ export type FindPetsResult = (Pet)[];
 export type FindPetsFallback = Error;
 
 export type FindPets = (payload: FindPetsRequest) => Promise<FindPetsResult>;
-export type AddPetRequest = NewPet;
+export type AddPetRequest = NewPet
 export type AddPetResult = Pet;
 
 export type AddPetFallback = Error;
@@ -64,7 +64,7 @@ export type FindPetById = (payload: FindPetByIdRequest) => Promise<FindPetByIdRe
 export interface DeletePetRequest {
   id: number
 }
-export interface DeletePetResult { /* unknown */ }
+export type DeletePetResult = any
 export type DeletePetFallback = Error;
 
 export type DeletePet = (payload: DeletePetRequest) => Promise<DeletePetResult>;"
@@ -98,7 +98,7 @@ export type FindPetsResult = (Pet)[];
 
 export type FindPetsFallback = Error;
 
-export type AddPetRequest = NewPet;
+export type AddPetRequest = NewPet
 export type AddPetResult = Pet;
 
 export type AddPetFallback = Error;
@@ -113,7 +113,7 @@ export type FindPetByIdFallback = Error;
 export interface DeletePetRequest {
   id: number
 }
-export interface DeletePetResult { /* unknown */ }
+export type DeletePetResult = any
 export type DeletePetFallback = Error;
 "
 `;
@@ -145,7 +145,7 @@ export type ListPetsFallback = Error;
 
 export interface CreatePetsRequest {
 }
-export interface CreatePetsResult { /* unknown */ }
+export type CreatePetsResult = any
 export type CreatePetsFallback = Error;
 
 export interface ShowPetByIdRequest {
@@ -153,7 +153,7 @@ export interface ShowPetByIdRequest {
 }
 export type ShowPetByIdResult = Pets;
 
-export interface ShowPetById204 { /* unknown */ }
+export type ShowPetById204 = any
 export type ShowPetByIdFallback = Error;
 "
 `;

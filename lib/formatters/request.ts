@@ -16,7 +16,7 @@ export class RequestTypeFormatter extends OperationFormatter {
   async toTypescriptInterface(typeName:string, parameters:RouteParameter[]) {
     const requestSchema = get(this.operation.route, 'requestBody.content["application/json"].schema')
     const aliasedType = requestSchema && requestSchema.$ref && getSchemaNameByRef(requestSchema.$ref)
-    if (aliasedType) return `export type ${typeName} = ${aliasedType};`
+    if (aliasedType) return `export type ${typeName} = ${aliasedType}`
     else return [
       `export interface ${typeName} {`,
         ...parameters.map(param => 

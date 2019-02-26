@@ -1,5 +1,4 @@
 import { OperationFormatter } from '../formatter'
-import { Store } from 'lib/store';
 
 export class FetchClientFormatter extends OperationFormatter {
   static async renderBoilerplate() {
