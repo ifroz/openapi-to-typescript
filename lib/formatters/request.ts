@@ -1,6 +1,8 @@
+import { get } from 'lodash'
+
 import { OperationFormatter } from '../formatter'
 import { RouteParameter } from '../operation'
-import { getSchemaName } from '../compile'
+import { getSchemaNameByRef, getSchemaName } from '../compile'
 
 export class RequestTypeFormatter extends OperationFormatter {
   async render():Promise<{[k: string]: string}> {
@@ -12,7 +14,10 @@ export class RequestTypeFormatter extends OperationFormatter {
   }
   
   async toTypescriptInterface(typeName:string, parameters:RouteParameter[]) {
-    return [
+    const requestSchema = get(this.operation.route, 'requestBody.content["application/json"].schema')
+    const aliasedType = requestSchema && requestSchema.$ref && getSchemaNameByRef(requestSchema.$ref)
+    if (aliasedType) return `export type ${typeName} = ${aliasedType};`
+    else return [
       `export interface ${typeName} {`,
         ...parameters.map(param => 
           `  ${param.name}: ${getSchemaName(param.schema, param.name)}`),
