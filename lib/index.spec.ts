@@ -12,7 +12,7 @@ describe('GenerateTypings', () => {
     }
     itShouldGenerateValidTypingsFromSchema(schema)
     it('should respond nothing', async () => {
-      const typeStore = await GenerateTypings(schema)
+      const { typeStore } = await GenerateTypings(schema)
       expect(typeStore.toString()).toMatch(/^\s*$/)
       expect(typeStore.toString()).toEqual('')
     })
@@ -22,7 +22,7 @@ describe('GenerateTypings', () => {
     const schema = require('../fixtures/petstore.json')
     itShouldGenerateValidTypingsFromSchema(schema)
     it('should output types for components.schemas', async () => {
-      const typeStore = await GenerateTypings(schema)
+      const { typeStore } = await GenerateTypings(schema)
       expect(typeStore.toString()).toContain('export interface Pet')
       expect(typeStore.toString()).toContain('export type Pets = (Pet)[]')
     })
@@ -32,12 +32,12 @@ describe('GenerateTypings', () => {
     const schema = require('../fixtures/petstoreExpanded.json')
     itShouldGenerateValidTypingsFromSchema(schema)
     it('should output types for components.schemas', async () => {
-      const typeStore = await GenerateTypings(schema)
+      const { typeStore } = await GenerateTypings(schema)
       expect(typeStore.toString()).toContain('export type Pet = NewPet & {')
       expect(typeStore.toObject()).toHaveProperty('NewPet')
     })
     it('should output types for paths', async () => {
-      const typeStore = await GenerateTypings(schema)
+      const { typeStore } = await GenerateTypings(schema)
       const typeObject = typeStore.toObject()
       expect(typeObject).toHaveProperty('FindPetByIdRequest')
       expect(typeObject).toHaveProperty('FindPetByIdResult', 'export type FindPetByIdResult = Pet;\n')
@@ -49,25 +49,37 @@ describe('GenerateTypings', () => {
         operationFormatters: [FetchClientFormatter]
       }
       itShouldGenerateValidTypingsFromSchema(schema, options)
-    })  
+      
+      it('should generate client actions', async () => {
+        const { typeStore, clientStore } = await GenerateTypings(schema, options)
+        expect(clientStore.toObject()).toMatchObject({
+          AddPet: expect.stringContaining('method: "post"')
+        })
+      })
+    })
   })
 })
 
 
 
 function itShouldGenerateValidTypingsFromSchema(schema:any, options?:GenerateTypingsOptions) {
-  it('should match snapshot', async () => {
-    expect((await GenerateTypings(schema, options)).toString()).toMatchSnapshot()
+  it('should match typeStore snapshot', async () => {
+    expect((await GenerateTypings(schema, options)).typeStore.toString()).toMatchSnapshot()
+  })
+
+  it('should match clientStore snapshot', async () => {
+    expect((await GenerateTypings(schema, options)).clientStore.toString()).toMatchSnapshot()
   })
 
   it('does not contain $magic$', async () => {
-    const typeStore = await GenerateTypings(schema, options)
+    const { typeStore } = await GenerateTypings(schema, options)
     expect(typeStore.toString()).not.toContain('$magic$')
   })
 
   it('should evaluate', async () => {
-    const typeStore = await GenerateTypings(schema, options)
+    const { typeStore, clientStore } = await GenerateTypings(schema, options)
     const typeDefs = typeStore.toString()
-    if (typeDefs.length) await execa.stdout('ts-node', ['--eval', typeDefs])
+    const clientDefs = clientStore.toString()
+    if (typeDefs.length) await execa.stdout('ts-node', ['--eval', typeDefs + '\n' + clientDefs])
   })
 }

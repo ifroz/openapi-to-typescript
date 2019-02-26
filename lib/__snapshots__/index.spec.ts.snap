@@ -1,8 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GenerateTypings given an empty openapi schema should match snapshot 1`] = `""`;
+exports[`GenerateTypings given an empty openapi schema should match clientStore snapshot 1`] = `""`;
 
-exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match snapshot 1`] = `
+exports[`GenerateTypings given an empty openapi schema should match typeStore snapshot 1`] = `""`;
+
+exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match clientStore snapshot 1`] = `
+"const fetch = require('node-fetch')
+const FindPets = async (payload: FindPetsRequest):Promise<FindPetsResult> => fetch({
+      method: \\"get\\",
+    }).then((res:any) => res.json())
+const AddPet = async (payload: AddPetRequest):Promise<AddPetResult> => fetch({
+      method: \\"post\\",
+    }).then((res:any) => res.json())
+const FindPetById = async (payload: FindPetByIdRequest):Promise<FindPetByIdResult> => fetch({
+      method: \\"get\\",
+    }).then((res:any) => res.json())
+const DeletePet = async (payload: DeletePetRequest):Promise<DeletePetResult> => fetch({
+      method: \\"delete\\",
+    }).then((res:any) => res.json())"
+`;
+
+exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match typeStore snapshot 1`] = `
 "export type Pet = NewPet & {
   id: number;
   [k: string]: any;
@@ -53,7 +71,9 @@ export type DeletePetFallback = Error;
 export type DeletePet = (payload: DeletePetRequest) => Promise<DeletePetResult>;"
 `;
 
-exports[`GenerateTypings given the Petstore Expanded schema should match snapshot 1`] = `
+exports[`GenerateTypings given the Petstore Expanded schema should match clientStore snapshot 1`] = `""`;
+
+exports[`GenerateTypings given the Petstore Expanded schema should match typeStore snapshot 1`] = `
 "export type Pet = NewPet & {
   id: number;
   [k: string]: any;
@@ -100,7 +120,9 @@ export type DeletePetFallback = Error;
 "
 `;
 
-exports[`GenerateTypings given the Petstore schema should match snapshot 1`] = `
+exports[`GenerateTypings given the Petstore schema should match clientStore snapshot 1`] = `""`;
+
+exports[`GenerateTypings given the Petstore schema should match typeStore snapshot 1`] = `
 "export interface Pet {
   id: number;
   name: string;
