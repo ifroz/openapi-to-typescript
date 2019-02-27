@@ -3,4 +3,5 @@ interface OpenAPISchema {
     schemas: any
   }
   paths: any
+  servers?: Array<any>
 }

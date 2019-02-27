@@ -7,3 +7,5 @@ export const defaultOperationFormatters = [
   RequestTypeFormatter,
   ResultTypeFormatter
 ]
+
+export { FetchClientFormatter } from './fetch'

@@ -9,26 +9,30 @@ Generate TypeScript typings based on az OpenAPI3 schema definition.
 
 # Install
 
-`npm install openapi-to-typescript`
+Run `npm install openapi-to-typescript` or `yarn add openapi-to-typescript`
 
-`yarn add openapi-to-typescript`
-
-# Usage
+# Usage in javascript
 
 ```javascript
 const { GenerateTypings } = require('openapi-to-typescript')
 
-const generatedTypescript = await GenerateTypings(openapiSchema)
-fs.writeFileSync('out.d.ts', generatedTypescript.toString())
+const { typeStore, clientStore } = await GenerateTypings(openapiSchema)
+fs.writeFileSync('out.d.ts', typeStore.toString())
+fs.writeFileSync('out.ts', clientStore.toString())
 
 ```
+
+# CLI Usage
+
+`yarn ts-node lib/cli --help`
 
 ### For development
 
 ```javascript
 const { GenerateTypings } = require('./dist/index')
 
-GenerateTypings(require('./fixtures/petstore.json')).then((typeStore) => {
-  fs.writeFileSync('./dist/out.d.ts', typeStore.toString())
+GenerateTypings(require('./fixtures/petstore.json')).then(({typeStore, clientStore}) => {
+  fs.writeFileSync('out.d.ts', typeStore.toString())
+  fs.writeFileSync('out.ts', clientStore.toString())
 })
 ```
