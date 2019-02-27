@@ -5,7 +5,9 @@ export class FetchClientFormatter extends OperationFormatter {
   static async renderBoilerplate(apiSchema: OpenAPISchema) {
     return [
       `const fetch = require('node-fetch')`,
-      `const API_URL = ${JSON.stringify(get(apiSchema, 'servers[0].url'))}`
+      `const pick = (obj:any, keys:string[]) => keys.reduce((picked, key) => obj[key] !== undefined ? Object.assign(picked, {[key]: obj[key]}) : picked, {})`,
+      `const encodeQuerystring = (obj:any, keys:string[]) => require('querystring').encode(pick(obj, keys))`,
+      `const API_URL = ${JSON.stringify(get(apiSchema, 'servers[0].url'))}`,
     ].join('\n')
   }
 
@@ -23,13 +25,20 @@ export class FetchClientFormatter extends OperationFormatter {
 
   async renderAction() {
     const { operationName, requestTypeName, responseTypeName } = this.names()
+    const queryParameterNames =
+      this.operation.route.parameters
+        .filter(param => param.in === 'query')
+        .map(param => param.name)
+
     const fetchWrapper = `const ${operationName} =
-      async (body:${requestTypeName}, options:any):Promise<${responseTypeName}> =>
-        fetch(API_URL, {
+      async (body:${requestTypeName}, options:any):Promise<${responseTypeName}> => {
+        const url = [API_URL, encodeQuerystring(body, ${JSON.stringify(queryParameterNames)})].filter(x=>x).join('?')
+        return fetch(url, {
           ...options,
           method: ${JSON.stringify(this.operation.method)},
           body: JSON.stringify(body)
-        }).then((res:any) => res.json())`
+        }).then((res:any) => res.json())
+      }`
     return {
       [operationName]: fetchWrapper
     }

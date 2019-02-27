@@ -3,7 +3,5 @@ interface OpenAPISchema {
     schemas: any
   }
   paths: any
-  servers: Array<{
-    url: string
-  }>
+  servers?: Array<any>
 }

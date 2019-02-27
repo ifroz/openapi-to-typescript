@@ -6,35 +6,49 @@ exports[`GenerateTypings given an empty openapi schema should match typeStore sn
 
 exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match clientStore snapshot 1`] = `
 "const fetch = require('node-fetch')
+const pick = (obj:any, keys:string[]) => keys.reduce((picked, key) => obj[key] !== undefined ? Object.assign(picked, {[key]: obj[key]}) : picked, {})
+const encodeQuerystring = (obj:any, keys:string[]) => require('querystring').encode(pick(obj, keys))
 const API_URL = \\"http://petstore.swagger.io/api\\"
 const FindPets =
-      async (body:FindPetsRequest, options:any):Promise<FindPetsResult> =>
-        fetch(API_URL, {
+      async (body:FindPetsRequest, options:any):Promise<FindPetsResult> => {
+        const queryParamNames:string[] = [\\"tags\\",\\"limit\\"]
+        const url = [API_URL, encodeQuerystring(body, queryParamNames)].filter(x=>x).join('?') 
+        return fetch(API_URL + '?' + encodeQuerystring(body, queryParamNames), {
           ...options,
           method: \\"get\\",
           body: JSON.stringify(body)
         }).then((res:any) => res.json())
+      }
 const AddPet =
-      async (body:AddPetRequest, options:any):Promise<AddPetResult> =>
-        fetch(API_URL, {
+      async (body:AddPetRequest, options:any):Promise<AddPetResult> => {
+        const queryParamNames:string[] = []
+        const url = [API_URL, encodeQuerystring(body, queryParamNames)].filter(x=>x).join('?') 
+        return fetch(API_URL + '?' + encodeQuerystring(body, queryParamNames), {
           ...options,
           method: \\"post\\",
           body: JSON.stringify(body)
         }).then((res:any) => res.json())
+      }
 const FindPetById =
-      async (body:FindPetByIdRequest, options:any):Promise<FindPetByIdResult> =>
-        fetch(API_URL, {
+      async (body:FindPetByIdRequest, options:any):Promise<FindPetByIdResult> => {
+        const queryParamNames:string[] = []
+        const url = [API_URL, encodeQuerystring(body, queryParamNames)].filter(x=>x).join('?') 
+        return fetch(API_URL + '?' + encodeQuerystring(body, queryParamNames), {
           ...options,
           method: \\"get\\",
           body: JSON.stringify(body)
         }).then((res:any) => res.json())
+      }
 const DeletePet =
-      async (body:DeletePetRequest, options:any):Promise<DeletePetResult> =>
-        fetch(API_URL, {
+      async (body:DeletePetRequest, options:any):Promise<DeletePetResult> => {
+        const queryParamNames:string[] = []
+        const url = [API_URL, encodeQuerystring(body, queryParamNames)].filter(x=>x).join('?') 
+        return fetch(API_URL + '?' + encodeQuerystring(body, queryParamNames), {
           ...options,
           method: \\"delete\\",
           body: JSON.stringify(body)
-        }).then((res:any) => res.json())"
+        }).then((res:any) => res.json())
+      }"
 `;
 
 exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match typeStore snapshot 1`] = `

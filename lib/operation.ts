@@ -4,6 +4,7 @@ import { JSONSchema } from 'json-schema-ref-parser';
 export interface RouteParameter {
   name: string
   schema: JSONSchema
+  in: 'query'|'header'|'path'|'cookie'
 }
 interface RouteObject {
   operationId?: string
