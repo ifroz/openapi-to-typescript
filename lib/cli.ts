@@ -12,8 +12,8 @@ yargs
 
     const outputFileWithoutExtension = 
       `${argv.output === true ? argv.input : argv.output}`.replace(/(\.d)?\.ts$/, '')
-    if (argv) {
-      if (argv.separateTypeDefinitions) {
+    if (argv.output) {
+      if (argv.typedefs) {
         fs.writeFileSync(`${outputFileWithoutExtension}.d.ts`, typeStore.toString())
         fs.writeFileSync(`${outputFileWithoutExtension}.ts`, clientStore.toString())
       } else {
@@ -37,7 +37,7 @@ yargs
     alias: 'o',
     describe: 'Output name to write to'
   })
-  .option('separateTypeDefinitions', {
+  .option('typedefs', {
     alias: 'd',
     describe: 'Generate separate .d.ts file',
     default: false
