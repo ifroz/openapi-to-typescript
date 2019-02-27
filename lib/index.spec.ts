@@ -80,6 +80,8 @@ function itShouldGenerateValidTypingsFromSchema(schema:any, options?:GenerateTyp
     const { typeStore, clientStore } = await GenerateTypings(schema, options)
     const typeDefs = typeStore.toString()
     const clientDefs = clientStore.toString()
-    if (typeDefs.length) await execa.stdout('ts-node', ['--eval', typeDefs + '\n' + clientDefs])
+    const generatedTypescriptCode = typeDefs + '\n' + clientDefs
+    // console.log(evaluatedTypescriptCode)
+    if (typeDefs.length) await execa.stdout('ts-node', ['--eval', generatedTypescriptCode])
   })
 }
