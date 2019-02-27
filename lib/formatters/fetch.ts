@@ -31,8 +31,8 @@ export class FetchClientFormatter extends OperationFormatter {
         .map(param => param.name)
 
     const urlCode = queryParameterNames.length ? 
-      'API_URL' : 
-      `[API_URL, encodeQuery(body, ${JSON.stringify(queryParameterNames)})].filter(x=>x).join('?')`
+      `[API_URL, encodeQuery(body, ${JSON.stringify(queryParameterNames)})].filter(x=>x).join('?')` :
+      'API_URL'
     const fetchWrapper = `const ${operationName} =
       async (body:${requestTypeName}, options:any):Promise<${responseTypeName}> => {
         return fetch(${urlCode}, {
