@@ -1,8 +1,12 @@
+import { get } from 'lodash'
 import { OperationFormatter } from '../formatter'
 
 export class FetchClientFormatter extends OperationFormatter {
-  static async renderBoilerplate() {
-    return `const fetch = require('node-fetch')`
+  static async renderBoilerplate(apiSchema: OpenAPISchema) {
+    return [
+      `const fetch = require('node-fetch')`,
+      `const API_URL = ${JSON.stringify(get(apiSchema, 'servers[0].url'))}`
+    ].join('\n')
   }
 
   async render():Promise<{[k: string]: string}> {
@@ -19,9 +23,13 @@ export class FetchClientFormatter extends OperationFormatter {
 
   async renderAction() {
     const { operationName, requestTypeName, responseTypeName } = this.names()
-    const fetchWrapper = `const ${operationName} = async (payload: ${requestTypeName}):Promise<${responseTypeName}> => fetch({
-      method: ${JSON.stringify(this.operation.method)},
-    }).then((res:any) => res.json())`
+    const fetchWrapper = `const ${operationName} =
+      async (body:${requestTypeName}, options:any):Promise<${responseTypeName}> =>
+        fetch(API_URL, {
+          ...options,
+          method: ${JSON.stringify(this.operation.method)},
+          body: JSON.stringify(body)
+        }).then((res:any) => res.json())`
     return {
       [operationName]: fetchWrapper
     }

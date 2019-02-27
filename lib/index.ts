@@ -11,11 +11,11 @@ export interface GenerateTypingsOptions {
 }
 
 export const GenerateTypings = async (
-  parsedOpenAPISchema:OpenAPISchema, 
+  apiSchema:OpenAPISchema, 
   { operationFormatters = [] }: GenerateTypingsOptions = {}
 ):Promise<{ [k: string]: Store<string> }> => {
-  const schemas = merge({}, parsedOpenAPISchema.components.schemas)
-  const paths = merge({}, parsedOpenAPISchema.paths)
+  const schemas = merge({}, apiSchema.components.schemas)
+  const paths = merge({}, apiSchema.paths)
   const typeStore = new Store<string>()
   const clientStore = new Store<string>()
 
@@ -30,7 +30,7 @@ export const GenerateTypings = async (
   for (let formatter of formatters) {
     if (typeof formatter.renderBoilerplate === 'function') {
       clientStore.assign({
-        [formatters.indexOf(formatter)]: await formatter.renderBoilerplate()
+        [formatters.indexOf(formatter)]: await formatter.renderBoilerplate(apiSchema)
       })
     }
   }
