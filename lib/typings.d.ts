@@ -1,7 +1,1 @@
-interface OpenAPISchema {
-  components: {
-    schemas: any
-  }
-  paths: any
-  servers?: Array<any>
-}
+// export * from "openapi3-ts/src/model"

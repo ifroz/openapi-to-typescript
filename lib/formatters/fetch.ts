@@ -1,8 +1,9 @@
 import { get } from 'lodash'
 import { OperationFormatter } from '../formatter'
+import { OpenAPIObject } from '../typings/openapi';
 
 export class FetchClientFormatter extends OperationFormatter {
-  static async renderBoilerplate(apiSchema: OpenAPISchema) {
+  static async renderBoilerplate(apiSchema: OpenAPIObject) {
     return [
       `const fetch = require('node-fetch')`,
       `const pick = (obj:any, keys:string[]) => keys.reduce((picked, key) => obj[key] !== undefined ? Object.assign(picked, {[key]: obj[key]}) : picked, {})`,
