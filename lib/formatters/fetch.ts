@@ -1,8 +1,9 @@
 import { get } from 'lodash'
-import { OperationFormatter } from '../formatter'
+import { Formatter } from '../formatter'
 import { OpenAPIObject } from '../typings/openapi';
+import { Operation } from 'lib/operation';
 
-export class FetchClientFormatter extends OperationFormatter {
+export class FetchClientFormatter extends Formatter<Operation> {
   static async renderBoilerplate(apiSchema: OpenAPIObject) {
     return [
       `const fetch = require('node-fetch')`,
@@ -12,22 +13,22 @@ export class FetchClientFormatter extends OperationFormatter {
     ].join('\n')
   }
 
-  async render():Promise<{[k: string]: string}> {
-    const { operationTypeName } = this.names()
+  async render(operation:Operation) {
+    const { operationTypeName } = this.names(operation)
     return {
-      [operationTypeName]: this.renderActionType(),
+      [operationTypeName]: this.renderActionType(operation),
     }
   }
   
-  renderActionType() {
-    const { operationName, requestTypeName, responseTypeName } = this.names()
+  renderActionType(operation:Operation) {
+    const { operationName, requestTypeName, responseTypeName } = this.names(operation)
     return `export type ${operationName} = (payload: ${requestTypeName}) => Promise<${responseTypeName}>;`
   }
 
-  async renderAction() {
-    const { operationName, requestTypeName, responseTypeName } = this.names()
+  async renderAction(operation:Operation) {
+    const { operationName, requestTypeName, responseTypeName } = this.names(operation)
     const queryParameterNames =
-      this.operation.route.parameters
+      operation.route.parameters
         .filter(param => param.in === 'query')
         .map(param => param.name)
 
@@ -38,7 +39,7 @@ export class FetchClientFormatter extends OperationFormatter {
       async (body:${requestTypeName}, options:any):Promise<${responseTypeName}> => {
         return fetch(${urlCode}, {
           ...options,
-          method: ${JSON.stringify(this.operation.method)},
+          method: ${JSON.stringify(operation.method)},
           body: JSON.stringify(body)
         }).then((res:any) => res.json())
       }`
@@ -47,9 +48,9 @@ export class FetchClientFormatter extends OperationFormatter {
     }
   }
 
-  names() {
-    const operationName = this.operation.name
-    const operationTypeName = this.operation.name + 'OperationType'
+  names(operation: Operation) {
+    const operationName = operation.name
+    const operationTypeName = operation.name + 'OperationType'
     const requestTypeName = operationName + 'Request'
     const responseTypeName = operationName + 'Result'
     return { operationName, operationTypeName, requestTypeName, responseTypeName }

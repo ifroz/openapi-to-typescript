@@ -1,14 +1,15 @@
 import { JSONSchema } from 'json-schema-ref-parser'
 import { get, camelCase, upperFirst } from 'lodash'
 
-import { OperationFormatter } from '../formatter'
+import { Formatter } from '../formatter'
 import { compileSchema } from '../compile'
+import { Operation } from 'lib/operation';
 
-export class ResultTypeFormatter extends OperationFormatter {
+export class ResultTypeFormatter extends Formatter<Operation> {
   public readonly contentType: string = 'application/json'
 
-  async render():Promise<{[k: string]: string}> {
-    const definitions = this.getResponseSchemaDefinitions()
+  async render(operation:Operation):Promise<{[k: string]: string}> {
+    const definitions = this.getResponseSchemaDefinitions(operation)
     const compilations = await Promise.all(
       definitions.map(({ schema, typeName }) => 
         this.compileDefinition(schema, typeName))
@@ -25,13 +26,13 @@ export class ResultTypeFormatter extends OperationFormatter {
       `export type ${typeName} = any`
   }
 
-  private getResponseSchemaDefinitions():ResponseSchemaDefinition[] {
-    const responsesByStatusCode = get(this.operation.route, 'responses', {})
+  private getResponseSchemaDefinitions(operation:Operation):ResponseSchemaDefinition[] {
+    const responsesByStatusCode = get(operation.route, 'responses', {})
     const statusCodes = this.getStatusCodes(responsesByStatusCode)
     return statusCodes.map(((statusCode, index):ResponseSchemaDefinition => {
       const key = `responses['${statusCode}'].content[${this.contentType}].schema`
-      const typeName = this.typeNameFor(index === 0 ? 'Result' : statusCode)
-      const schema = get(this.operation.route, key)
+      const typeName = this.typeNameFor(operation, index === 0 ? 'Result' : statusCode)
+      const schema = get(operation.route, key)
       return { schema, statusCode, typeName }
     }))
   }
@@ -44,9 +45,9 @@ export class ResultTypeFormatter extends OperationFormatter {
       .sort()
   }
 
-  private typeNameFor(suffix: number|string) {
+  private typeNameFor(operation:Operation, suffix: number|string) {
     return upperFirst(camelCase(`
-      ${this.operation.name} 
+      ${operation.name} 
       ${suffix === 'default' ? 'fallback' : suffix.toString()}
     `))
   }
