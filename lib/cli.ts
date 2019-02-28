@@ -7,7 +7,7 @@ yargs
   .command('generate', 'Write generated output to a file', {}, async (argv) => {
     const { typeStore, clientStore } = 
       await GenerateTypings(JSON.parse(fs.readFileSync(`${argv.input}`).toString()), {
-        operationFormatters: [FetchClientFormatter]
+        operationFormatters: [new FetchClientFormatter]
       })
 
     const outputFileWithoutExtension = 

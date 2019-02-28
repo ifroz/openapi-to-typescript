@@ -6,9 +6,10 @@ import { InternalRefRewriter } from './refs'
 import { eachOperation, Operation } from './operation'
 import { RequestTypeFormatter, ResultTypeFormatter, SchemaFormatter } from './formatters'
 import { OpenAPIObject } from './typings/openapi';
+import { Formatter } from './formatter';
 
 export interface GenerateTypingsOptions {
-  operationFormatters?: any[]
+  operationFormatters?: Formatter<Operation>[]
 }
 
 interface Stores {
@@ -30,21 +31,22 @@ export const GenerateTypings = async (
   new InternalRefRewriter().rewrite(paths)
 
   for (const schemaName of Object.keys(schemas)) {
-    typeStore.assign(await new SchemaFormatter(schemas[schemaName], schemaName).render())
+    typeStore.assign(await new SchemaFormatter(schemaName).render(schemas[schemaName]))
   }
 
-  const formatters = [
-    RequestTypeFormatter, 
-    ResultTypeFormatter, 
+  const formatters:Formatter<Operation>[] = [
+    new RequestTypeFormatter, 
+    new ResultTypeFormatter, 
     ...operationFormatters
   ]
-  for (let formatter of formatters) {
-    if (typeof formatter.renderBoilerplate === 'function') {
-      clientStore.assign({
-        [formatters.indexOf(formatter)]: await formatter.renderBoilerplate(apiSchema)
-      })
-    }
-  }
+
+  const hasBoilerplate = (formatter: any) => 
+    typeof (formatter as any).renderBoilerplate === 'function'
+  for (let formatter of formatters.filter(hasBoilerplate) as any[])
+    clientStore.assign({
+      [formatters.indexOf(formatter)]: await formatter.renderBoilerplate(apiSchema)
+    })
+
   for (const operation of eachOperation(paths)) {
     await applyFormatters(operation, formatters, stores)
   }
@@ -57,8 +59,7 @@ async function applyFormatters(
   formatters: any[], 
   { typeStore, clientStore }:Stores
 ) {
-  for (const OperationFormatter of formatters) {
-    const formatter = new OperationFormatter()
+  for (const formatter of formatters) {
     typeStore.assign(await formatter.render(operation))
     if (typeof formatter.renderAction === 'function')
       clientStore.assign(await formatter.renderAction(operation))

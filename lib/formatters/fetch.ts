@@ -4,7 +4,7 @@ import { OpenAPIObject } from '../typings/openapi';
 import { Operation } from 'lib/operation';
 
 export class FetchClientFormatter extends Formatter<Operation> {
-  static async renderBoilerplate(apiSchema: OpenAPIObject) {
+  async renderBoilerplate(apiSchema: OpenAPIObject) {
     return [
       `const fetch = require('node-fetch')`,
       `const pick = (obj:any, keys:string[]) => keys.reduce((picked, key) => obj[key] !== undefined ? Object.assign(picked, {[key]: obj[key]}) : picked, {})`,
