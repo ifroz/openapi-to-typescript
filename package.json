@@ -13,7 +13,9 @@
   "license": "MIT",
   "scripts": {
     "build": "rimraf dist && tsc",
+    "cli": "ts-node ./lib/cli",
     "commit": "git-cz",
+    "cz": "git-cz",
     "test": "jest"
   },
   "dependencies": {

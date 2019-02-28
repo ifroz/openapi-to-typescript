@@ -31,7 +31,6 @@ yargs
     demandOption: true,
     alias: 'i',
     describe: 'File to read from',
-    default: false
   })
   .option('output', {
     alias: 'o',
