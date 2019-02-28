@@ -3,7 +3,7 @@ import 'source-map-support/register'
 import { get, merge } from 'lodash'
 import { Store } from './store'
 import { InternalRefRewriter } from './refs'
-import { Operation } from './operation'
+import { eachOperation } from './operation'
 import { defaultOperationFormatters, SchemaFormatter } from './formatters'
 import { OpenAPIObject } from './typings/openapi';
 
@@ -35,15 +35,12 @@ export const GenerateTypings = async (
       })
     }
   }
-  for (const pathName of Object.keys(paths)) {
-    for (const method of Object.keys(paths[pathName])) {
-      const operation = new Operation(paths[pathName][method], { pathName, method })
-      for (const OperationFormatter of formatters) {
-        const formatter = new OperationFormatter(operation)
-        typeStore.assign(await formatter.render())
-        if (typeof formatter.renderAction === 'function')
-          clientStore.assign(await formatter.renderAction())
-      }
+  for (const operation of eachOperation(paths)) {
+    for (const OperationFormatter of formatters) {
+      const formatter = new OperationFormatter(operation)
+      typeStore.assign(await formatter.render())
+      if (typeof formatter.renderAction === 'function')
+        clientStore.assign(await formatter.renderAction())
     }
   }
 
