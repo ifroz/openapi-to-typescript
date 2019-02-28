@@ -56,10 +56,10 @@ export const GenerateTypings = async (
 
 async function applyFormatters(
   operation:Operation, 
-  formatters: any[], 
+  formatters: Formatter<Operation>[],
   { typeStore, clientStore }:Stores
 ) {
-  for (const formatter of formatters) {
+  for (const formatter of formatters as any[]) {
     typeStore.assign(await formatter.render(operation))
     if (typeof formatter.renderAction === 'function')
       clientStore.assign(await formatter.renderAction(operation))
