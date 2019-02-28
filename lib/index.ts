@@ -1,20 +1,21 @@
 import 'source-map-support/register'
 
-import { merge } from 'lodash'
+import { get, merge } from 'lodash'
 import { Store } from './store'
 import { InternalRefRewriter } from './refs'
 import { Operation } from './operation'
 import { defaultOperationFormatters, SchemaFormatter } from './formatters'
+import { OpenAPIObject } from './typings/openapi';
 
 export interface GenerateTypingsOptions {
   operationFormatters?: any[]
 }
 
 export const GenerateTypings = async (
-  apiSchema:OpenAPISchema, 
+  apiSchema:OpenAPIObject, 
   { operationFormatters = [] }: GenerateTypingsOptions = {}
 ):Promise<{ [k: string]: Store<string> }> => {
-  const schemas = merge({}, apiSchema.components.schemas)
+  const schemas = merge({}, get(apiSchema, 'components.schemas'))
   const paths = merge({}, apiSchema.paths)
   const typeStore = new Store<string>()
   const clientStore = new Store<string>()

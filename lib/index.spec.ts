@@ -1,10 +1,16 @@
 import { GenerateTypings, GenerateTypingsOptions } from './index'
 import execa from 'execa'
 import { FetchClientFormatter } from './formatters';
+import { OpenAPIObject } from './typings/openapi';
 
 describe('GenerateTypings', () => {
   describe('given an empty openapi schema', () => {
-    const schema = {
+    const schema:OpenAPIObject = {
+      openapi: '3.0.0',
+      info: {
+        "version": "1.0.0",
+        "title": "Some API",    
+      },
       components: {
         schemas: {}
       },
