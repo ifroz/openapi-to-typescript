@@ -1,23 +1,12 @@
 import { camelCase, upperFirst } from 'lodash'
-import { JSONSchema } from 'json-schema-ref-parser';
-import { PathsObject, ParameterLocation } from './typings/openapi';
-
-export interface RouteParameter {
-  name: string
-  schema: JSONSchema
-  in: 'query'|'header'|'path'|'cookie'
-}
-interface RouteObject {
-  operationId?: string
-  parameters: RouteParameter[]
-}
+import { PathsObject, ParameterLocation, OperationObject, ParameterObject } from './typings/openapi';
 
 export class Operation {
-  public readonly route:RouteObject
+  public readonly route:OperationObject
   public readonly name:string
   public readonly method:string
   public readonly pathName:string
-  constructor(route: RouteObject, {pathName, method}:{
+  constructor(route: OperationObject, {pathName, method}:{
     pathName: string, 
     method: string
   }) {
@@ -29,13 +18,13 @@ export class Operation {
   }
 
   hasAnyParametersIn(parameterLocation:ParameterLocation) {
-    return !!this.route.parameters.find(param => param.in === parameterLocation)
+    return !!(this.route.parameters || []).find((param) => (param as ParameterObject).in === parameterLocation)
   }
   parametersIn(parameterLocation:ParameterLocation) {
-    return this.route.parameters.filter(param => param.in === parameterLocation)
+    return (this.route.parameters || []).filter(param => (param as ParameterObject).in === parameterLocation)
   }
   parameterNamesIn(parameterLocation:ParameterLocation) {
-    return this.parametersIn(parameterLocation).map(param => param.name)
+    return this.parametersIn(parameterLocation).map(param => (param as ParameterObject).name)
   }
 }
 
