@@ -1,19 +1,17 @@
 import { JSONSchema } from 'json-schema-ref-parser';
 import { compileSchema } from '../compile';
 import { Formatter } from '../formatter';
-export class SchemaFormatter extends Formatter { 
-  readonly schema:JSONSchema
+export class SchemaFormatter extends Formatter<JSONSchema> { 
   readonly name:string
 
-  constructor(schema: JSONSchema, name: string) {
+  constructor(name: string) {
     super()
-    this.schema = schema
     this.name = name
   }
 
-  async render() {
+  async render(schema: JSONSchema) {
     return {
-      [this.name]: await compileSchema(this.schema, this.name)
+      [this.name]: await compileSchema(schema, this.name)
     }
   }
 }

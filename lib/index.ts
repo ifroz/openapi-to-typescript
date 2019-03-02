@@ -3,52 +3,65 @@ import 'source-map-support/register'
 import { get, merge } from 'lodash'
 import { Store } from './store'
 import { InternalRefRewriter } from './refs'
-import { Operation } from './operation'
-import { defaultOperationFormatters, SchemaFormatter } from './formatters'
+import { eachOperation, Operation } from './operation'
+import { RequestTypeFormatter, ResultTypeFormatter, SchemaFormatter } from './formatters'
 import { OpenAPIObject } from './typings/openapi';
+import { Formatter } from './formatter';
 
 export interface GenerateTypingsOptions {
-  operationFormatters?: any[]
+  operationFormatters?: Formatter<Operation>[]
+}
+
+interface Stores {
+  typeStore: Store<string>
+  clientStore: Store<string>
 }
 
 export const GenerateTypings = async (
   apiSchema:OpenAPIObject, 
   { operationFormatters = [] }: GenerateTypingsOptions = {}
-):Promise<{ [k: string]: Store<string> }> => {
+):Promise<Stores> => {
   const schemas = merge({}, get(apiSchema, 'components.schemas'))
   const paths = merge({}, apiSchema.paths)
   const typeStore = new Store<string>()
   const clientStore = new Store<string>()
+  const stores = { typeStore, clientStore }
 
   new InternalRefRewriter().rewrite(schemas)
   new InternalRefRewriter().rewrite(paths)
 
   for (const schemaName of Object.keys(schemas)) {
-    typeStore.assign(await new SchemaFormatter(schemas[schemaName], schemaName).render())
+    typeStore.assign(await new SchemaFormatter(schemaName).render(schemas[schemaName]))
   }
 
-  const formatters = [...defaultOperationFormatters, ...operationFormatters]
-  for (let formatter of formatters) {
-    if (typeof formatter.renderBoilerplate === 'function') {
-      clientStore.assign({
-        [formatters.indexOf(formatter)]: await formatter.renderBoilerplate(apiSchema)
-      })
-    }
-  }
-  for (const pathName of Object.keys(paths)) {
-    for (const method of Object.keys(paths[pathName])) {
-      const operation = new Operation(paths[pathName][method], { pathName, method })
-      for (const OperationFormatter of formatters) {
-        const formatter = new OperationFormatter(operation)
-        typeStore.assign(await formatter.render())
-        if (typeof formatter.renderAction === 'function')
-          clientStore.assign(await formatter.renderAction())
-      }
-    }
+  const formatters:Formatter<Operation>[] = [
+    new RequestTypeFormatter, 
+    new ResultTypeFormatter, 
+    ...operationFormatters
+  ]
+
+  const hasBoilerplate = (formatter: any) => 
+    typeof (formatter as any).renderBoilerplate === 'function'
+  for (let formatter of formatters.filter(hasBoilerplate) as any[])
+    clientStore.assign({
+      [formatters.indexOf(formatter)]: await formatter.renderBoilerplate(apiSchema)
+    })
+
+  for (const operation of eachOperation(paths)) {
+    await applyFormatters(operation, formatters, stores)
   }
 
-  return {
-    typeStore,
-    clientStore,
+  return stores
+}
+
+async function applyFormatters(
+  operation:Operation, 
+  formatters: Formatter<Operation>[],
+  { typeStore, clientStore }:Stores
+) {
+  for (const formatter of formatters as any[]) {
+    typeStore.assign(await formatter.render(operation))
+    if (typeof formatter.renderAction === 'function')
+      clientStore.assign(await formatter.renderAction(operation))
   }
 }

@@ -7,6 +7,7 @@ exports[`GenerateTypings given an empty openapi schema should match typeStore sn
 exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match clientStore snapshot 1`] = `
 "const fetch = require('node-fetch')
 const pick = (obj:any, keys:string[]) => keys.reduce((picked, key) => obj[key] !== undefined ? Object.assign(picked, {[key]: obj[key]}) : picked, {})
+const substitutePath = (pathName:string, body:any) => pathName.split('/').map(dir => dir.startsWith('{') ? body[dir.slice(1,-1)] : dir).join('/')
 const encodeQuery = (obj:any, keys:string[]) => require('querystring').encode(pick(obj, keys))
 const API_URL = \\"http://petstore.swagger.io/api\\"
 const FindPets =
@@ -14,7 +15,7 @@ const FindPets =
         return fetch([API_URL, encodeQuery(body, [\\"tags\\",\\"limit\\"])].filter(x=>x).join('?'), {
           ...options,
           method: \\"get\\",
-          body: JSON.stringify(body)
+          
         }).then((res:any) => res.json())
       }
 const AddPet =
@@ -22,23 +23,23 @@ const AddPet =
         return fetch(API_URL, {
           ...options,
           method: \\"post\\",
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
         }).then((res:any) => res.json())
       }
 const FindPetById =
       async (body:FindPetByIdRequest, options:any):Promise<FindPetByIdResult> => {
-        return fetch(API_URL, {
+        return fetch(API_URL + substitutePath(\\"/pets/{id}\\", body), {
           ...options,
           method: \\"get\\",
-          body: JSON.stringify(body)
+          
         }).then((res:any) => res.json())
       }
 const DeletePet =
       async (body:DeletePetRequest, options:any):Promise<DeletePetResult> => {
-        return fetch(API_URL, {
+        return fetch(API_URL + substitutePath(\\"/pets/{id}\\", body), {
           ...options,
           method: \\"delete\\",
-          body: JSON.stringify(body)
+          
         }).then((res:any) => res.json())
       }"
 `;

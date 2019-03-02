@@ -1,11 +1,6 @@
-import { RequestTypeFormatter } from './request'
-import { ResultTypeFormatter } from './response'
+export { RequestTypeFormatter } from './request'
+export { ResultTypeFormatter } from './response'
 
 export { SchemaFormatter } from './schema'
-
-export const defaultOperationFormatters = [
-  RequestTypeFormatter,
-  ResultTypeFormatter
-]
 
 export { FetchClientFormatter } from './fetch'

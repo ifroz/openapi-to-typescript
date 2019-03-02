@@ -52,7 +52,7 @@ describe('GenerateTypings', () => {
 
     describe('FetchClientFormatter', () => {
       const options = {
-        operationFormatters: [FetchClientFormatter]
+        operationFormatters: [new FetchClientFormatter]
       }
       itShouldGenerateValidTypingsFromSchema(schema, options)
       
