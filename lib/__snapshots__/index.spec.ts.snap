@@ -15,7 +15,7 @@ const FindPets =
         return fetch([API_URL, encodeQuery(body, [\\"tags\\",\\"limit\\"])].filter(x=>x).join('?'), {
           ...options,
           method: \\"get\\",
-          body: JSON.stringify(body)
+          
         }).then((res:any) => res.json())
       }
 const AddPet =
@@ -23,7 +23,7 @@ const AddPet =
         return fetch(API_URL, {
           ...options,
           method: \\"post\\",
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
         }).then((res:any) => res.json())
       }
 const FindPetById =
@@ -31,7 +31,7 @@ const FindPetById =
         return fetch(API_URL + substitutePath(\\"/pets/{id}\\", body), {
           ...options,
           method: \\"get\\",
-          body: JSON.stringify(body)
+          
         }).then((res:any) => res.json())
       }
 const DeletePet =
@@ -39,7 +39,7 @@ const DeletePet =
         return fetch(API_URL + substitutePath(\\"/pets/{id}\\", body), {
           ...options,
           method: \\"delete\\",
-          body: JSON.stringify(body)
+          
         }).then((res:any) => res.json())
       }"
 `;

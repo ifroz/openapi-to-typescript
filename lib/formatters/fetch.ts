@@ -5,6 +5,7 @@ import { OpenAPIObject, ParameterLocation } from '../typings/openapi';
 import { Operation } from 'lib/operation';
 
 const withoutIndentation = (s:string) => s.replace(/(\s*[\n]+)\s*/g, '\n').trim()
+const withoutEmptyLines = (s:string) => s.replace(/\n+/g, '\n')
 
 export class FetchClientFormatter extends Formatter<Operation> {
   url:string
@@ -31,14 +32,14 @@ export class FetchClientFormatter extends Formatter<Operation> {
 
   async renderAction(operation:Operation) {
     const { operationName, requestTypeName, responseTypeName } = this.names(operation)
-    const fetchWrapper = `const ${operationName} =
+    const fetchWrapper = withoutEmptyLines(`const ${operationName} =
       async (body:${requestTypeName}, options:any):Promise<${responseTypeName}> => {
         return fetch(${this.urlSnippet(operation)}, {
           ...options,
           method: ${JSON.stringify(operation.method)},
-          body: JSON.stringify(body)
+          ${operation.route.requestBody ? 'body: JSON.stringify(body),' : ''}
         }).then((res:any) => res.json())
-      }`
+      }`)
     return { [operationName]: fetchWrapper }
   }
 
