@@ -37,7 +37,7 @@ export class FetchClientFormatter extends Formatter<Operation> {
         return fetch(${this.urlSnippet(operation)}, {
           ...options,
           method: ${JSON.stringify(operation.method)},
-          ${operation.route.requestBody ? 'body: JSON.stringify(body),' : ''}
+          ${operation.operationObject.requestBody ? 'body: JSON.stringify(body),' : ''}
         }).then((res:any) => res.json())
       }`)
     return { [operationName]: fetchWrapper }

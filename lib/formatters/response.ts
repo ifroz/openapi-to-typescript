@@ -27,12 +27,12 @@ export class ResultTypeFormatter extends Formatter<Operation> {
   }
 
   private getResponseSchemaDefinitions(operation:Operation):ResponseSchemaDefinition[] {
-    const responsesByStatusCode = get(operation.route, 'responses', {})
+    const responsesByStatusCode = get(operation.operationObject, 'responses', {})
     const statusCodes = this.getStatusCodes(responsesByStatusCode)
     return statusCodes.map(((statusCode, index):ResponseSchemaDefinition => {
       const key = `responses['${statusCode}'].content[${this.contentType}].schema`
       const typeName = this.typeNameFor(operation, index === 0 ? 'Result' : statusCode)
-      const schema = get(operation.route, key)
+      const schema = get(operation.operationObject, key)
       return { schema, statusCode, typeName }
     }))
   }
