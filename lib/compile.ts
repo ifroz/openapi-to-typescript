@@ -1,5 +1,5 @@
+import { JSONSchema } from 'json-schema-ref-parser'
 import { compile } from 'json-schema-to-typescript'
-import { JSONSchema } from 'json-schema-ref-parser';
 import { get } from 'lodash'
 
 export const compileSchema = async (schema: JSONSchema, schemaName: string, scheme = 'internal') =>
@@ -27,21 +27,23 @@ export const getSchemaNameByRef = (url: string, scheme = 'internal') => {
   return interfaceName
 }
 
-const removeMagic = (line: string):string => 
-  line.replace(/"\$magic\$[^"]+"/g, found => found.substr(8, found.length - 9))
+const removeMagic = (line: string): string =>
+  line.replace(/"\$magic\$[^"]+"/g, (found) => found.substr(8, found.length - 9))
 
 export function getSchemaName(schema: JSONSchema, schemaName: string) {
-  if (schema.$ref) 
+  if (schema.$ref) {
     return getSchemaNameByRef(schema.$ref)
-  else switch (schema.type) {
-    case 'object': 
-      // function compileSchemaAndReturnName(schema: JSONSchema, schemaName: string) {}
-      return schemaName
-    case 'array':
-      return get(schema.items, 'type', 'any') + '[]'
-    case 'integer':
-      return 'number'
-    default: 
-      return schema.type || 'never'
+  } else {
+    switch (schema.type) {
+      case 'object':
+        // function compileSchemaAndReturnName(schema: JSONSchema, schemaName: string) {}
+        return schemaName
+      case 'array':
+        return get(schema.items, 'type', 'any') + '[]'
+      case 'integer':
+        return 'number'
+      default:
+        return schema.type || 'never'
+    }
   }
 }
