@@ -16,6 +16,7 @@
     "cli": "ts-node ./lib/cli",
     "commit": "git-cz",
     "cz": "git-cz",
+    "lint": "tslint -c tslint.json 'lib/**/*.ts'",
     "test": "jest"
   },
   "dependencies": {
@@ -37,6 +38,7 @@
     "source-map-support": "^0.5.10",
     "ts-jest": "^24.0.0",
     "ts-node": "^8.0.1",
+    "tslint": "^5.13.1",
     "typescript": "^3.2.4"
   },
   "jest": {

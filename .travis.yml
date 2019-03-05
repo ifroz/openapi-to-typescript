@@ -7,5 +7,6 @@ install:
 script:
   - yarn build
   - yarn test
+  - yarn lint
 after_success:
   - npx semantic-release
