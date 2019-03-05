@@ -8,7 +8,7 @@ describe('InternalRefRewriter', () => {
     }
     rewriter.rewrite(root)
     expect(root).toMatchObject({
-      $ref: 'scheme://some/path/selector'
+      $ref: 'scheme://some/path/selector',
     })
   })
 
@@ -17,17 +17,17 @@ describe('InternalRefRewriter', () => {
     const root = {
       nested: {
         deeply: {
-          $ref: "#/deep/internal/ref"
-        }
-      }
+          $ref: '#/deep/internal/ref',
+        },
+      },
     }
     rewriter.rewrite(root)
     expect(root).toMatchObject({
       nested: {
         deeply: {
-          $ref: "scheme://deep/internal/ref"
-        }
-      }
+          $ref: 'scheme://deep/internal/ref',
+        },
+      },
     })
   })
 })

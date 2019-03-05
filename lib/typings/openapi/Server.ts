@@ -1,32 +1,32 @@
-import * as oa from "./OpenApi";
+import * as oa from './OpenApi'
 
 // Server & Server Variable
 
 export class Server implements oa.ServerObject {
-    url: string;
-    description?: string;
-    variables: { [v: string]: ServerVariable };
+    public url: string
+    public description?: string
+    public variables: { [v: string]: ServerVariable }
 
     constructor(url: string, desc?: string) {
-        this.url = url;
-        this.description = desc;
-        this.variables = {};
+        this.url = url
+        this.description = desc
+        this.variables = {}
     }
-    addVariable(name: string, variable: ServerVariable) {
-        this.variables[name] = variable;
+    public addVariable(name: string, variable: ServerVariable) {
+        this.variables[name] = variable
     }
 }
 
 export class ServerVariable implements oa.ServerVariableObject {
-    enum?: string[] | boolean[] | number[];
-    default: string | boolean | number;
-    description?: string;
+    public enum?: string[] | boolean[] | number[]
+    public default: string | boolean | number
+    public description?: string
 
     constructor(defaultValue: any,
                 enums?: any,
                 description?: string) {
-        this.default = defaultValue;
-        this.enum = enums;
-        this.description = description;
+        this.default = defaultValue
+        this.enum = enums
+        this.description = description
     }
 }

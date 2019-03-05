@@ -6,7 +6,7 @@ describe('Store<T>', () => {
     s.assign({ a: true })
     s.assign({ b: true, c: true })
     expect(s.toObject()).toEqual({
-      a: true, 
+      a: true,
       b: true,
       c: true,
     })

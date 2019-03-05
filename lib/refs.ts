@@ -1,11 +1,11 @@
 export class InternalRefRewriter {
-  private readonly prefix:string
+  private readonly prefix: string
   constructor(scheme = 'internal') {
     this.prefix = scheme + ':/'
   }
 
-  public rewrite(root: any):void {
-    Object.keys(root).forEach(key => {
+  public rewrite(root: any): void {
+    Object.keys(root).forEach((key) => {
       if (key === '$ref') root[key] = this.prefixedRef(root[key])
       if (typeof root[key] === 'object') this.rewrite(root[key]) // resursion
     })

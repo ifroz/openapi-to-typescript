@@ -1,20 +1,20 @@
-import { GenerateTypings, GenerateTypingsOptions } from './index'
 import execa from 'execa'
-import { FetchClientFormatter } from './formatters';
-import { OpenAPIObject } from './typings/openapi';
+import { FetchClientFormatter } from './formatters'
+import { GenerateTypings, GenerateTypingsOptions } from './index'
+import { OpenAPIObject } from './typings/openapi'
 
 describe('GenerateTypings', () => {
   describe('given an empty openapi schema', () => {
-    const schema:OpenAPIObject = {
+    const schema: OpenAPIObject = {
       openapi: '3.0.0',
       info: {
-        "version": "1.0.0",
-        "title": "Some API",    
+        version: '1.0.0',
+        title: 'Some API',
       },
       components: {
-        schemas: {}
+        schemas: {},
       },
-      paths: {}
+      paths: {},
     }
     itShouldGenerateValidTypingsFromSchema(schema)
     it('should respond nothing', async () => {
@@ -52,23 +52,21 @@ describe('GenerateTypings', () => {
 
     describe('FetchClientFormatter', () => {
       const options = {
-        operationFormatters: [new FetchClientFormatter]
+        operationFormatters: [new FetchClientFormatter],
       }
       itShouldGenerateValidTypingsFromSchema(schema, options)
-      
+
       it('should generate client actions', async () => {
         const { typeStore, clientStore } = await GenerateTypings(schema, options)
         expect(clientStore.toObject()).toMatchObject({
-          AddPet: expect.stringContaining('method: "post"')
+          AddPet: expect.stringContaining('method: "post"'),
         })
       })
     })
   })
 })
 
-
-
-function itShouldGenerateValidTypingsFromSchema(schema:any, options?:GenerateTypingsOptions) {
+function itShouldGenerateValidTypingsFromSchema(schema: any, options?: GenerateTypingsOptions) {
   it('should match typeStore snapshot', async () => {
     expect((await GenerateTypings(schema, options)).typeStore.toString()).toMatchSnapshot()
   })

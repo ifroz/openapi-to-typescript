@@ -1,29 +1,30 @@
 import { get } from 'lodash'
 
+import { JSONSchema } from 'json-schema-ref-parser'
+import { getSchemaName, getSchemaNameByRef } from '../compile'
 import { Formatter } from '../formatter'
 import { Operation } from '../operation'
-import { getSchemaNameByRef, getSchemaName } from '../compile'
-import { ParameterObject } from '../typings/openapi';
-import { JSONSchema } from 'json-schema-ref-parser';
+import { ParameterObject } from '../typings/openapi'
 
 export class RequestTypeFormatter extends Formatter<Operation> {
-  async render(operation:Operation):Promise<{[k: string]: string}> {
+  public async render(operation: Operation): Promise<{[k: string]: string}> {
     const typeName = `${operation.name}Request`
     const parameters = operation.operationObject.parameters || []
     return {
-      [typeName]: await this.toTypescriptInterface(operation, typeName, parameters as ParameterObject[])
+      [typeName]: await this.toTypescriptInterface(operation, typeName, parameters as ParameterObject[]),
     }
   }
-  
-  async toTypescriptInterface(operation:Operation, typeName:string, parameters:ParameterObject[]) {
+
+  public async toTypescriptInterface(operation: Operation, typeName: string, parameters: ParameterObject[]) {
     const requestSchema = get(operation.operationObject, 'requestBody.content["application/json"].schema')
     const aliasedType = requestSchema && requestSchema.$ref && getSchemaNameByRef(requestSchema.$ref)
     if (aliasedType) return `export type ${typeName} = ${aliasedType}`
-    else return [
+    else { return [
       `export interface ${typeName} {`,
-        ...parameters.map(param => 
+        ...parameters.map((param) =>
           `  ${param.name}: ${getSchemaName(param.schema as JSONSchema, param.name)}`),
-      `}`
+      '}',
     ].join('\n')
+    }
   }
 }
