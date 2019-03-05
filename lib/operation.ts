@@ -32,6 +32,12 @@ export class Operation {
   }
 }
 
+export function extractOperations(paths: PathsObject): Operation[] {
+  const operations = []
+  for (const operation of eachOperation(paths)) operations.push(operation)
+  return operations
+}
+
 export function eachOperation(paths: PathsObject) {
   return {
     *[Symbol.iterator]() {

@@ -3,7 +3,7 @@ import 'source-map-support/register'
 import { get, merge } from 'lodash'
 import { Formatter } from './formatter'
 import { RequestTypeFormatter, ResultTypeFormatter, SchemaFormatter } from './formatters'
-import { eachOperation, Operation } from './operation'
+import { extractOperations, Operation } from './operation'
 import { InternalRefRewriter } from './refs'
 import { Store } from './store'
 import { OpenAPIObject } from './typings/openapi'
@@ -48,7 +48,8 @@ export const GenerateTypings = async (
     })
   }
 
-  for (const operation of eachOperation(paths)) {
+  const operations = extractOperations(paths)
+  for (const operation of operations) {
     await applyFormatters(operation, formatters, stores)
   }
 
