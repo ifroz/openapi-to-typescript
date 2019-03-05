@@ -40,7 +40,7 @@ export class ResultTypeFormatter extends Formatter<Operation> {
   private getStatusCodes(responsesByStatusCode: any) {
     const whitelist: (number|string)[] = ['default']
     return Object.keys(responsesByStatusCode)
-      .map((n) => whitelist.includes(n) ? n : parseInt(n))
+      .map((n) => whitelist.includes(n) ? n : parseInt(n, 10))
       .filter((n) => whitelist.includes(n) || n >= 200 && n < 400)
       .sort()
   }

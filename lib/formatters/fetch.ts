@@ -13,6 +13,8 @@ export class FetchClientFormatter extends Formatter<Operation> {
     super()
     this.url = url
   }
+
+  /* tslint:disable:max-line-length */
   public async renderBoilerplate(apiSchema: OpenAPIObject) {
     const url = this.url || get(apiSchema, 'servers[0].url')
     return withoutIndentation(`
@@ -23,6 +25,7 @@ export class FetchClientFormatter extends Formatter<Operation> {
       const API_URL = ${JSON.stringify(url)}
     `)
   }
+  /* tslint:enable:max-line-length */
 
   public async render(operation: Operation) {
     const { operationTypeName, operationName, requestTypeName, responseTypeName } = this.names(operation)

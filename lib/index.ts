@@ -35,8 +35,8 @@ export const GenerateTypings = async (
   }
 
   const formatters: Formatter<Operation>[] = [
-    new RequestTypeFormatter,
-    new ResultTypeFormatter,
+    new RequestTypeFormatter(),
+    new ResultTypeFormatter(),
     ...operationFormatters,
   ]
 

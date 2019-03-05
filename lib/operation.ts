@@ -18,13 +18,17 @@ export class Operation {
   }
 
   public hasAnyParametersIn(parameterLocation: ParameterLocation) {
-    return !!(this.operationObject.parameters || []).find((param) => (param as ParameterObject).in === parameterLocation)
+    return !!(this.operationObject.parameters || []).find(this.isParameterInLocation(parameterLocation))
   }
   public parametersIn(parameterLocation: ParameterLocation) {
-    return (this.operationObject.parameters || []).filter((param) => (param as ParameterObject).in === parameterLocation)
+    return (this.operationObject.parameters || []).filter(this.isParameterInLocation(parameterLocation))
   }
   public parameterNamesIn(parameterLocation: ParameterLocation) {
     return this.parametersIn(parameterLocation).map((param) => (param as ParameterObject).name)
+  }
+
+  private isParameterInLocation(parameterLocation: ParameterLocation) {
+    return (param: any) => (param as ParameterObject).in === parameterLocation
   }
 }
 

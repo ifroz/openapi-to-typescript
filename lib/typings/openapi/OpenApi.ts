@@ -150,7 +150,7 @@ export interface BaseParameterObject extends ISpecificationExtension {
     deprecated?: boolean
     allowEmptyValue?: boolean
 
-    style?: ParameterStyle // "matrix" | "label" | "form" | "simple" | "spaceDelimited" | "pipeDelimited" | "deepObject";
+    style?: ParameterStyle // "matrix"|"label"|"form"|"simple"|"spaceDelimited"|"pipeDelimited"|"deepObject"
     explode?: boolean
     allowReserved?: boolean
     schema?: SchemaObject | ReferenceObject
@@ -234,6 +234,7 @@ export interface LinkObject extends ISpecificationExtension {
 export interface LinkParametersObject {
     [name: string]: any | string
 }
+/* tslint:disable:no-empty-interface */
 export interface HeaderObject extends BaseParameterObject {
 }
 export interface TagObject extends ISpecificationExtension {
