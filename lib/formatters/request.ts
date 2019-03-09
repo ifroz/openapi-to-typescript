@@ -7,12 +7,10 @@ import { Operation } from '../operation'
 import { ParameterObject } from '../typings/openapi'
 
 export class RequestTypeFormatter extends Formatter<Operation> {
-  public async render(operation: Operation): Promise<{[k: string]: string}> {
+  public async render(operation: Operation) {
     const typeName = `${operation.name}Request`
     const parameters = operation.operationObject.parameters || []
-    return {
-      [typeName]: await this.toTypescriptInterface(operation, typeName, parameters as ParameterObject[]),
-    }
+    return await this.toTypescriptInterface(operation, typeName, parameters as ParameterObject[])
   }
 
   public async toTypescriptInterface(operation: Operation, typeName: string, parameters: ParameterObject[]) {

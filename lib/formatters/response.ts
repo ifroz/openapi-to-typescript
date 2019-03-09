@@ -8,16 +8,13 @@ import { Formatter } from '../formatter'
 export class ResultTypeFormatter extends Formatter<Operation> {
   public readonly contentType: string = 'application/json'
 
-  public async render(operation: Operation): Promise<{[k: string]: string}> {
+  public async render(operation: Operation) {
     const definitions = this.getResponseSchemaDefinitions(operation)
     const compilations = await Promise.all(
       definitions.map(({ schema, typeName }) =>
         this.compileDefinition(schema, typeName)),
     )
-    return definitions.reduce((typeDefs, definition, index) =>
-      Object.assign(typeDefs, {
-        [definition.typeName]: compilations[index],
-      }), {})
+    return compilations.join('\n')
   }
 
   private async compileDefinition(schema: JSONSchema, typeName: string) {

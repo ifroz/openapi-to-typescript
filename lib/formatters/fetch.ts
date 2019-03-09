@@ -3,6 +3,7 @@ import { Operation } from 'lib/operation'
 import { get } from 'lodash'
 import { Formatter } from '../formatter'
 import { OpenAPIObject, ParameterLocation } from '../typings/openapi'
+import { type } from 'os';
 
 const withoutIndentation = (s: string) => s.replace(/(\s*[\n]+)\s*/g, '\n').trim()
 const withoutEmptyLines = (s: string) => s.replace(/\n+/g, '\n')
@@ -15,7 +16,7 @@ export class FetchClientFormatter extends Formatter<Operation> {
   }
 
   /* tslint:disable:max-line-length */
-  public async renderBoilerplate(apiSchema: OpenAPIObject) {
+  public async renderBoilerplate(apiSchema?: OpenAPIObject) {
     const url = this.url || get(apiSchema, 'servers[0].url')
     return withoutIndentation(`
       const fetch = require('node-fetch')
@@ -28,13 +29,8 @@ export class FetchClientFormatter extends Formatter<Operation> {
   /* tslint:enable:max-line-length */
 
   public async render(operation: Operation) {
-    const { operationTypeName, operationName, requestTypeName, responseTypeName } = this.names(operation)
-    const typedef = `export type ${operationName} = (payload: ${requestTypeName}) => Promise<${responseTypeName}>;`
-    return { [operationTypeName]: typedef }
-  }
-
-  public async renderAction(operation: Operation) {
     const { operationName, requestTypeName, responseTypeName } = this.names(operation)
+    const typedef = `export type ${operationName} = (payload: ${requestTypeName}) => Promise<${responseTypeName}>;`
     const fetchWrapper = withoutEmptyLines(`const ${operationName} =
       async (body:${requestTypeName}, options:any):Promise<${responseTypeName}> => {
         return fetch(${this.urlSnippet(operation)}, {
@@ -43,7 +39,7 @@ export class FetchClientFormatter extends Formatter<Operation> {
           ${operation.operationObject.requestBody ? 'body: JSON.stringify(body),' : ''}
         }).then((res:any) => res.json())
       }`)
-    return { [operationName]: fetchWrapper }
+    return `${typedef}\n${fetchWrapper}`
   }
 
   public names(operation: Operation) {

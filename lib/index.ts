@@ -20,18 +20,18 @@ interface Stores {
 export const GenerateTypings = async (
   apiSchema: OpenAPIObject,
   { operationFormatters = [] }: GenerateTypingsOptions = {},
-): Promise<Stores> => {
+): Promise<string> => {
   const schemas = merge({}, get(apiSchema, 'components.schemas'))
   const paths = merge({}, apiSchema.paths)
   const typeStore = new Store<string>()
   const clientStore = new Store<string>()
-  const stores = { typeStore, clientStore }
+  const codeChunks: string[] = []
 
   new InternalRefRewriter().rewrite(schemas)
   new InternalRefRewriter().rewrite(paths)
 
   for (const schemaName of Object.keys(schemas)) {
-    typeStore.assign(await new SchemaFormatter(schemaName).render(schemas[schemaName]))
+    codeChunks.push(await new SchemaFormatter(schemaName).render(schemas[schemaName]))
   }
 
   const formatters: Formatter<Operation>[] = [
@@ -43,28 +43,15 @@ export const GenerateTypings = async (
   const hasBoilerplate = (formatter: any) =>
     typeof (formatter as any).renderBoilerplate === 'function'
   for (const formatter of formatters.filter(hasBoilerplate) as any[]) {
-    clientStore.assign({
-      [formatters.indexOf(formatter)]: await formatter.renderBoilerplate(apiSchema),
-    })
+    codeChunks.push(await formatter.renderBoilerplate(apiSchema))
   }
 
   const operations = extractOperations(paths)
   for (const operation of operations) {
-    await applyFormatters(operation, formatters, stores)
-  }
-
-  return stores
-}
-
-async function applyFormatters(
-  operation: Operation,
-  formatters: Formatter<Operation>[],
-  { typeStore, clientStore }: Stores,
-) {
-  for (const formatter of formatters as any[]) {
-    typeStore.assign(await formatter.render(operation))
-    if (typeof formatter.renderAction === 'function') {
-      clientStore.assign(await formatter.renderAction(operation))
+    for (const formatter of formatters) {
+      codeChunks.push(await formatter.render(operation))
     }
   }
+
+  return codeChunks.join('\n')
 }
