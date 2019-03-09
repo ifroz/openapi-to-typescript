@@ -45,7 +45,7 @@ describe('GenerateTypings', () => {
     it('should output types for paths', async () => {
       const generated = await GenerateTypings(schema)
       expect(generated).toContain('FindPetByIdRequest')
-      expect(generated).toContain('FindPetByIdResult') 
+      expect(generated).toContain('FindPetByIdResult')
       expect(generated).toContain('export type FindPetByIdResult = Pet;\n')
       expect(generated).toContain('FindPetByIdFallback')
       expect(generated).toContain('export type FindPetByIdFallback = Error;\n')
@@ -53,7 +53,7 @@ describe('GenerateTypings', () => {
 
     describe('FetchClientFormatter', () => {
       const options = {
-        operationFormatters: [new FetchClientFormatter()],
+        operationFormatters: [new FetchClientFormatter(schema)],
       }
       itShouldGenerateValidTypingsFromSchema(schema, options)
 
@@ -68,6 +68,10 @@ describe('GenerateTypings', () => {
 function itShouldGenerateValidTypingsFromSchema(schema: any, options?: GenerateTypingsOptions) {
   it('should match generated snapshot', async () => {
     expect((await GenerateTypings(schema, options))).toMatchSnapshot()
+  })
+
+  it('does not contain assignment of undefined', async () => {
+    expect(await GenerateTypings(schema, options)).not.toContain(' = undefined')
   })
 
   it('does not contain $magic$', async () => {

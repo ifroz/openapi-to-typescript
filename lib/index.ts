@@ -12,19 +12,12 @@ export interface GenerateTypingsOptions {
   operationFormatters?: Formatter<Operation>[]
 }
 
-interface Stores {
-  typeStore: Store<string>
-  clientStore: Store<string>
-}
-
 export const GenerateTypings = async (
   apiSchema: OpenAPIObject,
   { operationFormatters = [] }: GenerateTypingsOptions = {},
 ): Promise<string> => {
   const schemas = merge({}, get(apiSchema, 'components.schemas'))
   const paths = merge({}, apiSchema.paths)
-  const typeStore = new Store<string>()
-  const clientStore = new Store<string>()
   const codeChunks: string[] = []
 
   new InternalRefRewriter().rewrite(schemas)
@@ -40,17 +33,10 @@ export const GenerateTypings = async (
     ...operationFormatters,
   ]
 
-  const hasBoilerplate = (formatter: any) =>
-    typeof (formatter as any).renderBoilerplate === 'function'
-  for (const formatter of formatters.filter(hasBoilerplate) as any[]) {
-    codeChunks.push(await formatter.renderBoilerplate(apiSchema))
-  }
-
   const operations = extractOperations(paths)
-  for (const operation of operations) {
-    for (const formatter of formatters) {
-      codeChunks.push(await formatter.render(operation))
-    }
+  for (const formatter of formatters) {
+    const renderedString = await formatter.renderToString(operations)
+    if (renderedString) codeChunks.push(renderedString)
   }
 
   return codeChunks.join('\n')

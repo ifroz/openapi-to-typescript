@@ -20,19 +20,37 @@ export interface Error {
   [k: string]: any;
 }
 
-const fetch = require('node-fetch')
-const pick = (obj:any, keys:string[]) => keys.reduce((picked, key) => obj[key] !== undefined ? Object.assign(picked, {[key]: obj[key]}) : picked, {})
-const substitutePath = (pathName:string, body:any) => pathName.split('/').map(dir => dir.startsWith('{') ? body[dir.slice(1,-1)] : dir).join('/')
-const encodeQuery = (obj:any, keys:string[]) => require('querystring').encode(pick(obj, keys))
-const API_URL = \\"http://petstore.swagger.io/api\\"
 export interface FindPetsRequest {
   tags: string[]
   limit: number
+}
+export type AddPetRequest = NewPet
+export interface FindPetByIdRequest {
+  id: number
+}
+export interface DeletePetRequest {
+  id: number
 }
 export type FindPetsResult = (Pet)[];
 
 export type FindPetsFallback = Error;
 
+export type AddPetResult = Pet;
+
+export type AddPetFallback = Error;
+
+export type FindPetByIdResult = Pet;
+
+export type FindPetByIdFallback = Error;
+
+export type DeletePetResult = any
+export type DeletePetFallback = Error;
+
+const fetch = require('node-fetch')
+const pick = (obj:any, keys:string[]) => keys.reduce((picked, key) => obj[key] !== undefined ? Object.assign(picked, {[key]: obj[key]}) : picked, {})
+const substitutePath = (pathName:string, body:any) => pathName.split('/').map(dir => dir.startsWith('{') ? body[dir.slice(1,-1)] : dir).join('/')
+const encodeQuery = (obj:any, keys:string[]) => require('querystring').encode(pick(obj, keys))
+const API_URL = \\"http://petstore.swagger.io/api\\"
 export type FindPets = (payload: FindPetsRequest) => Promise<FindPetsResult>;
 const FindPets =
       async (body:FindPetsRequest, options:any):Promise<FindPetsResult> => {
@@ -42,11 +60,6 @@ const FindPets =
           
         }).then((res:any) => res.json())
       }
-export type AddPetRequest = NewPet
-export type AddPetResult = Pet;
-
-export type AddPetFallback = Error;
-
 export type AddPet = (payload: AddPetRequest) => Promise<AddPetResult>;
 const AddPet =
       async (body:AddPetRequest, options:any):Promise<AddPetResult> => {
@@ -56,13 +69,6 @@ const AddPet =
           body: JSON.stringify(body),
         }).then((res:any) => res.json())
       }
-export interface FindPetByIdRequest {
-  id: number
-}
-export type FindPetByIdResult = Pet;
-
-export type FindPetByIdFallback = Error;
-
 export type FindPetById = (payload: FindPetByIdRequest) => Promise<FindPetByIdResult>;
 const FindPetById =
       async (body:FindPetByIdRequest, options:any):Promise<FindPetByIdResult> => {
@@ -72,12 +78,6 @@ const FindPetById =
           
         }).then((res:any) => res.json())
       }
-export interface DeletePetRequest {
-  id: number
-}
-export type DeletePetResult = any
-export type DeletePetFallback = Error;
-
 export type DeletePet = (payload: DeletePetRequest) => Promise<DeletePetResult>;
 const DeletePet =
       async (body:DeletePetRequest, options:any):Promise<DeletePetResult> => {
@@ -111,25 +111,25 @@ export interface FindPetsRequest {
   tags: string[]
   limit: number
 }
+export type AddPetRequest = NewPet
+export interface FindPetByIdRequest {
+  id: number
+}
+export interface DeletePetRequest {
+  id: number
+}
 export type FindPetsResult = (Pet)[];
 
 export type FindPetsFallback = Error;
 
-export type AddPetRequest = NewPet
 export type AddPetResult = Pet;
 
 export type AddPetFallback = Error;
 
-export interface FindPetByIdRequest {
-  id: number
-}
 export type FindPetByIdResult = Pet;
 
 export type FindPetByIdFallback = Error;
 
-export interface DeletePetRequest {
-  id: number
-}
 export type DeletePetResult = any
 export type DeletePetFallback = Error;
 "
@@ -154,18 +154,18 @@ export interface Error {
 export interface ListPetsRequest {
   limit: number
 }
+export interface CreatePetsRequest {
+}
+export interface ShowPetByIdRequest {
+  petId: string
+}
 export type ListPetsResult = Pets;
 
 export type ListPetsFallback = Error;
 
-export interface CreatePetsRequest {
-}
 export type CreatePetsResult = any
 export type CreatePetsFallback = Error;
 
-export interface ShowPetByIdRequest {
-  petId: string
-}
 export type ShowPetByIdResult = Pets;
 
 export type ShowPetById204 = any
