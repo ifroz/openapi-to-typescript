@@ -10,6 +10,7 @@
         "interface-name": false,
         "max-classes-per-file": false,
         "object-literal-sort-keys": false,
+        "no-implicit-dependencies": [true, "dev"],
         "quotemark": [true, "single", "avoid-escape", "avoid-template"],
         "semicolon": [true, "never"]
     },

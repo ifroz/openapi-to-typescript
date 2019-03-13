@@ -1,9 +1,9 @@
 import { JSONSchema } from 'json-schema-ref-parser'
 import { camelCase, get, upperFirst } from 'lodash'
 
-import { Operation } from 'lib/operation'
 import { compileSchema } from '../compile'
 import { Formatter } from '../formatter'
+import { Operation } from '../operation'
 
 export class ResultTypeFormatter extends Formatter<Operation> {
   public readonly contentType: string = 'application/json'

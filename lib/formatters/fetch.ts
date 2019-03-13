@@ -1,7 +1,7 @@
 
-import { Operation } from 'lib/operation'
 import { get } from 'lodash'
 import { Formatter } from '../formatter'
+import { Operation } from '../operation'
 import { OpenAPIObject } from '../typings/openapi'
 
 const withoutIndentation = (s: string) => s.replace(/(\s*[\n]+)\s*/g, '\n').trim()
