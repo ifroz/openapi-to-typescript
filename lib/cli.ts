@@ -6,7 +6,7 @@ import { FetchClientFormatter } from './formatters'
 /* tslint:disable:no-console */
 export default yargs
   .command('generate', 'Write generated output to a file', {}, async (argv) => {
-    const { typeStore, clientStore } =
+    const generatedTypescript =
       await GenerateTypings(JSON.parse(fs.readFileSync(`${argv.input}`).toString()), {
         operationFormatters: [new FetchClientFormatter()],
       })
@@ -14,18 +14,9 @@ export default yargs
     const outputFileWithoutExtension =
       `${argv.output === true ? argv.input : argv.output}`.replace(/(\.d)?\.ts$/, '')
     if (argv.output) {
-      if (argv.typedefs) {
-        fs.writeFileSync(`${outputFileWithoutExtension}.d.ts`, typeStore.toString())
-        fs.writeFileSync(`${outputFileWithoutExtension}.ts`, clientStore.toString())
-      } else {
-        fs.writeFileSync(`${outputFileWithoutExtension}.ts`, [
-          typeStore.toString(),
-          clientStore.toString(),
-        ].join('\n'))
-      }
+      fs.writeFileSync(`${outputFileWithoutExtension}.ts`, generatedTypescript)
     } else {
-      console.log(typeStore.toString())
-      console.log(clientStore.toString())
+      console.log(generatedTypescript)
     }
   })
   .option('input', {
@@ -36,11 +27,6 @@ export default yargs
   .option('output', {
     alias: 'o',
     describe: 'Output name to write to',
-  })
-  .option('typedefs', {
-    alias: 'd',
-    describe: 'Generate separate .d.ts file',
-    default: false,
   })
   .option('verbose', {
     alias: 'v',
