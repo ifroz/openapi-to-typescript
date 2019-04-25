@@ -85,7 +85,6 @@ function itShouldGenerateValidTypingsFromSchema(schema: any, options?: GenerateT
     const typeDefs = typeStore.toString()
     const clientDefs = clientStore.toString()
     const generatedTypescriptCode = typeDefs + '\n' + clientDefs
-    // console.log(evaluatedTypescriptCode)
     if (typeDefs.length) await execa.stdout('ts-node', ['--eval', generatedTypescriptCode])
   })
 }
