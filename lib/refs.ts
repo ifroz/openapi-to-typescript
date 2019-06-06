@@ -7,7 +7,7 @@ export class InternalRefRewriter {
   public rewrite(root: any): void {
     Object.keys(root).forEach((key) => {
       if (key === '$ref') root[key] = this.prefixedRef(root[key])
-      if (typeof root[key] === 'object') this.rewrite(root[key]) // resursion
+      if (root[key] && typeof root[key] === 'object') this.rewrite(root[key]) // resursion
     })
   }
 
