@@ -5,7 +5,7 @@ import { FetchClientFormatter } from './formatters'
 
 /* tslint:disable:no-console */
 export default yargs
-  .command('generate', 'Write generated output to a file', {}, async (argv) => {
+  .command(['generate', '$0'], 'Write generated output to a file', {}, async (argv) => {
     const generatedTypescript =
       await GenerateTypings(JSON.parse(fs.readFileSync(`${argv.input}`).toString()), {
         operationFormatters: [new FetchClientFormatter()],
