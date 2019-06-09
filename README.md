@@ -16,23 +16,20 @@ Run `npm install openapi-to-typescript` or `yarn add openapi-to-typescript`
 ```javascript
 const { GenerateTypings } = require('openapi-to-typescript')
 
-const { typeStore, clientStore } = await GenerateTypings(openapiSchema)
-fs.writeFileSync('out.d.ts', typeStore.toString())
-fs.writeFileSync('out.ts', clientStore.toString())
-
+const generatedTypescriptCode = await GenerateTypings(openapiSchema)
+fs.writeFileSync('out.ts', generatedTypescriptCode)
 ```
 
 # CLI Usage
 
-`yarn ts-node lib/cli --help`
+`yarn cli --help`
 
 ### For development
 
 ```javascript
 const { GenerateTypings } = require('./dist/index')
 
-GenerateTypings(require('./fixtures/petstore.json')).then(({typeStore, clientStore}) => {
-  fs.writeFileSync('out.d.ts', typeStore.toString())
-  fs.writeFileSync('out.ts', clientStore.toString())
+GenerateTypings(require('./fixtures/petstore.json')).then((generatedTypescriptCode: string) => {
+  fs.writeFileSync('out.ts', generatedTypescriptCode)
 })
 ```
