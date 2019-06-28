@@ -1,8 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`openapi-to-typescript CLI should --help 1`] = `
-"[2K[1G[2m$ ts-node ./lib/cli --help[22m
-cli
+"cli
 
 Write generated output to a file
 

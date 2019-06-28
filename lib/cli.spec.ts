@@ -12,6 +12,6 @@ describe('openapi-to-typescript CLI', () => {
   })
 })
 
-function runCLI(arg: string) {
-  return execa('yarn', ['cli', ...arg.split(/\s+/g)])
+function runCLI(arg: string, opts?: any) {
+  return execa('ts-node', ['./lib/cli', ...arg.split(/\s+/g)], opts)
 }
