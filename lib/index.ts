@@ -5,7 +5,6 @@ import { Formatter } from './formatter'
 import { RequestTypeFormatter, ResultTypeFormatter, SchemaFormatter } from './formatters'
 import { extractOperations, Operation } from './operation'
 import { InternalRefRewriter } from './refs'
-import { Store } from './store'
 import { OpenAPIObject } from './typings/openapi'
 
 export interface GenerateTypingsOptions {
