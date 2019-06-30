@@ -5,14 +5,20 @@ describe('openapi-to-typescript CLI', () => {
     const executed = await runCLI('--help')
     expect(executed.stdout).toMatchSnapshot()
   })
-  it('should output typescipt code to stdout', async () => {
-    const executed = await runCLI('-i ./fixtures/petstore.json')
-    expect(executed.stdout).toContain('API_URL = ')
-    expect(executed.stdout).toContain('ShowPetById')
+
+  describe('--input -i', () => {
+    it('should output typescipt code to stdout', async () => {
+      const executed = await runCLI('-i ./fixtures/petstore.json')
+      expect(executed.stdout).toContain('API_URL = ')
+      expect(executed.stdout).toContain('ShowPetById')
+    })
   })
-  describe('--server -s', async () => {
-    const executed = await runCLI('-i ./fixtures/petstore.json -s some://custom.api')
-    expect(executed.stdout).toContain('API_URL = "some://custom.api"')
+
+  describe('--server -s', () => {
+    it('should set the API url to the one provided', async () => {
+      const executed = await runCLI('-i ./fixtures/petstore.json -s some://custom.api')
+      expect(executed.stdout).toContain('API_URL = "some://custom.api"')
+    })
   })
 })
 
