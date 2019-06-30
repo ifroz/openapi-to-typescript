@@ -10,8 +10,6 @@ export class SchemaFormatter extends Formatter<JSONSchema> {
   }
 
   public async render(schema: JSONSchema) {
-    return {
-      [this.name]: await compileSchema(schema, this.name),
-    }
+    return await compileSchema(schema, this.name)
   }
 }

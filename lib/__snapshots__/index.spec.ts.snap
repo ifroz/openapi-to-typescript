@@ -1,15 +1,57 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GenerateTypings given an empty openapi schema should match clientStore snapshot 1`] = `""`;
+exports[`GenerateTypings given an empty openapi schema should match generated snapshot 1`] = `""`;
 
-exports[`GenerateTypings given an empty openapi schema should match typeStore snapshot 1`] = `""`;
+exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match generated snapshot 1`] = `
+"export type Pet = NewPet & {
+  id: number;
+  [k: string]: any;
+};
 
-exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match clientStore snapshot 1`] = `
-"const fetch = require('node-fetch')
+export interface NewPet {
+  name: string;
+  tag?: string;
+  [k: string]: any;
+}
+
+export interface Error {
+  code: number;
+  message: string;
+  [k: string]: any;
+}
+
+export interface FindPetsRequest {
+  tags: string[]
+  limit: number
+}
+export type AddPetRequest = NewPet
+export interface FindPetByIdRequest {
+  id: number
+}
+export interface DeletePetRequest {
+  id: number
+}
+export type FindPetsResult = (Pet)[];
+
+export type FindPetsFallback = Error;
+
+export type AddPetResult = Pet;
+
+export type AddPetFallback = Error;
+
+export type FindPetByIdResult = Pet;
+
+export type FindPetByIdFallback = Error;
+
+export type DeletePetResult = any
+export type DeletePetFallback = Error;
+
+const fetch = require('node-fetch')
 const pick = (obj:any, keys:string[]) => keys.reduce((picked, key) => obj[key] !== undefined ? Object.assign(picked, {[key]: obj[key]}) : picked, {})
 const substitutePath = (pathName:string, body:any) => pathName.split('/').map(dir => dir.startsWith('{') ? body[dir.slice(1,-1)] : dir).join('/')
 const encodeQuery = (obj:any, keys:string[]) => require('querystring').encode(pick(obj, keys))
 const API_URL = \\"http://petstore.swagger.io/api\\"
+export type FindPets = (payload: FindPetsRequest) => Promise<FindPetsResult>;
 const FindPets =
       async (body:FindPetsRequest, options:any):Promise<FindPetsResult> => {
         return fetch([API_URL, encodeQuery(body, [\\"tags\\",\\"limit\\"])].filter(x=>x).join('?'), {
@@ -18,6 +60,7 @@ const FindPets =
           
         }).then((res:any) => res.json())
       }
+export type AddPet = (payload: AddPetRequest) => Promise<AddPetResult>;
 const AddPet =
       async (body:AddPetRequest, options:any):Promise<AddPetResult> => {
         return fetch(API_URL, {
@@ -26,6 +69,7 @@ const AddPet =
           body: JSON.stringify(body),
         }).then((res:any) => res.json())
       }
+export type FindPetById = (payload: FindPetByIdRequest) => Promise<FindPetByIdResult>;
 const FindPetById =
       async (body:FindPetByIdRequest, options:any):Promise<FindPetByIdResult> => {
         return fetch(API_URL + substitutePath(\\"/pets/{id}\\", body), {
@@ -34,6 +78,7 @@ const FindPetById =
           
         }).then((res:any) => res.json())
       }
+export type DeletePet = (payload: DeletePetRequest) => Promise<DeletePetResult>;
 const DeletePet =
       async (body:DeletePetRequest, options:any):Promise<DeletePetResult> => {
         return fetch(API_URL + substitutePath(\\"/pets/{id}\\", body), {
@@ -44,7 +89,7 @@ const DeletePet =
       }"
 `;
 
-exports[`GenerateTypings given the Petstore Expanded schema FetchClientFormatter should match typeStore snapshot 1`] = `
+exports[`GenerateTypings given the Petstore Expanded schema should match generated snapshot 1`] = `
 "export type Pet = NewPet & {
   id: number;
   [k: string]: any;
@@ -66,85 +111,31 @@ export interface FindPetsRequest {
   tags: string[]
   limit: number
 }
-export type FindPetsResult = (Pet)[];
-
-export type FindPetsFallback = Error;
-
-export type FindPets = (payload: FindPetsRequest) => Promise<FindPetsResult>;
 export type AddPetRequest = NewPet
-export type AddPetResult = Pet;
-
-export type AddPetFallback = Error;
-
-export type AddPet = (payload: AddPetRequest) => Promise<AddPetResult>;
 export interface FindPetByIdRequest {
   id: number
 }
-export type FindPetByIdResult = Pet;
-
-export type FindPetByIdFallback = Error;
-
-export type FindPetById = (payload: FindPetByIdRequest) => Promise<FindPetByIdResult>;
 export interface DeletePetRequest {
   id: number
-}
-export type DeletePetResult = any
-export type DeletePetFallback = Error;
-
-export type DeletePet = (payload: DeletePetRequest) => Promise<DeletePetResult>;"
-`;
-
-exports[`GenerateTypings given the Petstore Expanded schema should match clientStore snapshot 1`] = `""`;
-
-exports[`GenerateTypings given the Petstore Expanded schema should match typeStore snapshot 1`] = `
-"export type Pet = NewPet & {
-  id: number;
-  [k: string]: any;
-};
-
-export interface NewPet {
-  name: string;
-  tag?: string;
-  [k: string]: any;
-}
-
-export interface Error {
-  code: number;
-  message: string;
-  [k: string]: any;
-}
-
-export interface FindPetsRequest {
-  tags: string[]
-  limit: number
 }
 export type FindPetsResult = (Pet)[];
 
 export type FindPetsFallback = Error;
 
-export type AddPetRequest = NewPet
 export type AddPetResult = Pet;
 
 export type AddPetFallback = Error;
 
-export interface FindPetByIdRequest {
-  id: number
-}
 export type FindPetByIdResult = Pet;
 
 export type FindPetByIdFallback = Error;
 
-export interface DeletePetRequest {
-  id: number
-}
 export type DeletePetResult = any
 export type DeletePetFallback = Error;
 "
 `;
 
-exports[`GenerateTypings given the Petstore schema should match clientStore snapshot 1`] = `""`;
-
-exports[`GenerateTypings given the Petstore schema should match typeStore snapshot 1`] = `
+exports[`GenerateTypings given the Petstore schema should match generated snapshot 1`] = `
 "export interface Pet {
   id: number;
   name: string;
@@ -163,18 +154,18 @@ export interface Error {
 export interface ListPetsRequest {
   limit: number
 }
+export interface CreatePetsRequest {
+}
+export interface ShowPetByIdRequest {
+  petId: string
+}
 export type ListPetsResult = Pets;
 
 export type ListPetsFallback = Error;
 
-export interface CreatePetsRequest {
-}
 export type CreatePetsResult = any
 export type CreatePetsFallback = Error;
 
-export interface ShowPetByIdRequest {
-  petId: string
-}
 export type ShowPetByIdResult = Pets;
 
 export type ShowPetById204 = any

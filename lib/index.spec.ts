@@ -18,9 +18,9 @@ describe('GenerateTypings', () => {
     }
     itShouldGenerateValidTypingsFromSchema(schema)
     it('should respond nothing', async () => {
-      const { typeStore } = await GenerateTypings(schema)
-      expect(typeStore.toString()).toMatch(/^\s*$/)
-      expect(typeStore.toString()).toEqual('')
+      const generated = await GenerateTypings(schema)
+      expect(generated).toMatch(/^\s*$/)
+      expect(generated).toEqual('')
     })
   })
 
@@ -28,9 +28,9 @@ describe('GenerateTypings', () => {
     const schema = require('../fixtures/petstore.json')
     itShouldGenerateValidTypingsFromSchema(schema)
     it('should output types for components.schemas', async () => {
-      const { typeStore } = await GenerateTypings(schema)
-      expect(typeStore.toString()).toContain('export interface Pet')
-      expect(typeStore.toString()).toContain('export type Pets = (Pet)[]')
+      const generated = await GenerateTypings(schema)
+      expect(generated).toContain('export interface Pet')
+      expect(generated).toContain('export type Pets = (Pet)[]')
     })
   })
 
@@ -38,53 +38,48 @@ describe('GenerateTypings', () => {
     const schema = require('../fixtures/petstoreExpanded.json')
     itShouldGenerateValidTypingsFromSchema(schema)
     it('should output types for components.schemas', async () => {
-      const { typeStore } = await GenerateTypings(schema)
-      expect(typeStore.toString()).toContain('export type Pet = NewPet & {')
-      expect(typeStore.toObject()).toHaveProperty('NewPet')
+      const generated = await GenerateTypings(schema)
+      expect(generated).toContain('export type Pet = NewPet & {')
+      expect(generated).toContain('NewPet ')
     })
     it('should output types for paths', async () => {
-      const { typeStore } = await GenerateTypings(schema)
-      const typeObject = typeStore.toObject()
-      expect(typeObject).toHaveProperty('FindPetByIdRequest')
-      expect(typeObject).toHaveProperty('FindPetByIdResult', 'export type FindPetByIdResult = Pet;\n')
-      expect(typeObject).toHaveProperty('FindPetByIdFallback', 'export type FindPetByIdFallback = Error;\n')
+      const generated = await GenerateTypings(schema)
+      expect(generated).toContain('FindPetByIdRequest')
+      expect(generated).toContain('FindPetByIdResult')
+      expect(generated).toContain('export type FindPetByIdResult = Pet;\n')
+      expect(generated).toContain('FindPetByIdFallback')
+      expect(generated).toContain('export type FindPetByIdFallback = Error;\n')
     })
 
     describe('FetchClientFormatter', () => {
       const options = {
-        operationFormatters: [new FetchClientFormatter()],
+        operationFormatters: [new FetchClientFormatter(schema)],
       }
       itShouldGenerateValidTypingsFromSchema(schema, options)
 
       it('should generate client actions', async () => {
-        const { typeStore, clientStore } = await GenerateTypings(schema, options)
-        expect(clientStore.toObject()).toMatchObject({
-          AddPet: expect.stringContaining('method: "post"'),
-        })
+        const generated = await GenerateTypings(schema, options)
+        expect(generated).toContain('method: "post"')
       })
     })
   })
 })
 
 function itShouldGenerateValidTypingsFromSchema(schema: any, options?: GenerateTypingsOptions) {
-  it('should match typeStore snapshot', async () => {
-    expect((await GenerateTypings(schema, options)).typeStore.toString()).toMatchSnapshot()
+  it('should match generated snapshot', async () => {
+    expect((await GenerateTypings(schema, options))).toMatchSnapshot()
   })
 
-  it('should match clientStore snapshot', async () => {
-    expect((await GenerateTypings(schema, options)).clientStore.toString()).toMatchSnapshot()
+  it('does not contain assignment of undefined', async () => {
+    expect(await GenerateTypings(schema, options)).not.toContain(' = undefined')
   })
 
   it('does not contain $magic$', async () => {
-    const { typeStore } = await GenerateTypings(schema, options)
-    expect(typeStore.toString()).not.toContain('$magic$')
+    expect(await GenerateTypings(schema, options)).not.toContain('$magic$')
   })
 
   it('should evaluate', async () => {
-    const { typeStore, clientStore } = await GenerateTypings(schema, options)
-    const typeDefs = typeStore.toString()
-    const clientDefs = clientStore.toString()
-    const generatedTypescriptCode = typeDefs + '\n' + clientDefs
-    if (typeDefs.length) await execa.stdout('ts-node', ['--eval', generatedTypescriptCode])
+    const generated = await GenerateTypings(schema, options)
+    if (/\S+/.test(generated)) await execa('ts-node', ['--eval', generated])
   })
 }

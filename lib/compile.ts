@@ -1,15 +1,16 @@
 import { JSONSchema } from 'json-schema-ref-parser'
 import { compile } from 'json-schema-to-typescript'
 import { get } from 'lodash'
+import { INTERNAL_SCHEME } from './refs'
 
-export const compileSchema = async (schema: JSONSchema, schemaName: string, scheme = 'internal') =>
+export const compileSchema = async (schema: JSONSchema, schemaName: string) =>
   compile(schema as any, schemaName, {
     bannerComment: '',
     $refOptions: {
       resolve: {
         magic: {
           order: -100,
-          canRead: new RegExp(`^${scheme}://`),
+          canRead: new RegExp(`^${INTERNAL_SCHEME}://`),
           read: magicReader,
         },
       },
@@ -21,8 +22,8 @@ const magicReader = (def: any, cb: any) => {
   cb(null, { type: 'string', enum: [`$magic$${interfaceName}`] })
 }
 
-export const getSchemaNameByRef = (url: string, scheme = 'internal') => {
-  const objPath = url.substr(`${scheme}:/`.length).split('/')
+export const getSchemaNameByRef = (url: string) => {
+  const objPath = url.substr(`${INTERNAL_SCHEME}:/`.length).split('/')
   const interfaceName = objPath[objPath.length - 1]
   return interfaceName
 }

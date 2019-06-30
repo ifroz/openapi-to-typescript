@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`openapi-to-typescript CLI should --help 1`] = `
+"cli
+
+Write generated output to a file
+
+Commands:
+  cli generate  Write generated output to a file                       [default]
+
+Options:
+  --help         Show help                                             [boolean]
+  --version      Show version number                                   [boolean]
+  --input, -i    File to read from                                    [required]
+  --output, -o   Output name to write to
+  --server, -s   Server URL to use (defaults to the first one in the OpenAPI
+                 spec)
+  --verbose, -v                                                 [default: false]"
+`;
