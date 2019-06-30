@@ -7,11 +7,14 @@ import { OpenAPIObject } from '../typings/openapi'
 const withoutIndentation = (s: string) => s.replace(/(\s*[\n]+)\s*/g, '\n').trim()
 const withoutEmptyLines = (s: string) => s.replace(/\n+/g, '\n')
 
+interface FetchClientFormatterOptions {
+  serverUrl?: string
+}
 export class FetchClientFormatter extends Formatter<Operation> {
   public url: string
-  constructor(apiSchema?: OpenAPIObject) {
+  constructor(apiSchema?: OpenAPIObject, { serverUrl }: FetchClientFormatterOptions = {}) {
     super()
-    this.url = get(apiSchema, 'servers[0].url')
+    this.url = serverUrl || get(apiSchema, 'servers[0].url')
   }
 
   public async renderToString(operations: Operation[]) {

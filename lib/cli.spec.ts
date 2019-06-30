@@ -10,6 +10,10 @@ describe('openapi-to-typescript CLI', () => {
     expect(executed.stdout).toContain('API_URL = ')
     expect(executed.stdout).toContain('ShowPetById')
   })
+  describe('--server -s', async () => {
+    const executed = await runCLI('-i ./fixtures/petstore.json -s some://custom.api')
+    expect(executed.stdout).toContain('API_URL = "some://custom.api"')
+  })
 })
 
 function runCLI(arg: string, opts?: any) {
