@@ -1,7 +1,7 @@
 import { JSONSchema } from 'json-schema-ref-parser'
 import { compileSchema } from '../compile'
-import { Formatter } from '../formatter'
-export class SchemaFormatter extends Formatter<JSONSchema> {
+import { ConcatFormatter } from '../formatter'
+export class SchemaFormatter extends ConcatFormatter<JSONSchema> {
   public readonly name: string
 
   constructor(name: string) {

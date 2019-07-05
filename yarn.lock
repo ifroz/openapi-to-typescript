@@ -256,6 +256,11 @@
   resolved "https://registry.yarnpkg.com/@types/cli-color/-/cli-color-0.3.29.tgz#c83a71fe02c8c7e1ccec048dd6a2458d1f6c96ea"
   integrity sha1-yDpx/gLIx+HM7ASN1qJFjR9sluo=
 
+"@types/ejs@^2.6.3":
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-2.6.3.tgz#b6509e9925d7eb5e95c8c73b6492e5baae7c1e6a"
+  integrity sha512-/F+qQ0Fr0Dr1YvHjX+FCvbba4sQ27RdCPDqmP/si0e1v1GOkbQ3VRBvZPSQM7NoQ3iz3SyiJVscCP2f0vKuIhQ==
+
 "@types/execa@^0.9.0":
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/@types/execa/-/execa-0.9.0.tgz#9b025d2755f17e80beaf9368c3f4f319d8b0fb93"
@@ -1664,6 +1669,11 @@ editor@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/editor/-/editor-1.0.0.tgz#60c7f87bd62bcc6a894fa8ccd6afb7823a24f742"
   integrity sha1-YMf4e9YrzGqJT6jM1q+3gjok90I=
+
+ejs@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.2.tgz#3a32c63d1cd16d11266cd4703b14fec4e74ab4f6"
+  integrity sha512-PcW2a0tyTuPHz3tWyYqtK6r1fZ3gp+3Sop8Ph+ZYN81Ob5rwmbHEzaqs10N3BEsaGTkh/ooniXK+WwszGlc2+Q==
 
 emoji-regex@^7.0.1:
   version "7.0.3"

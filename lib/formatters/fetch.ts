@@ -1,6 +1,6 @@
 
 import { get } from 'lodash'
-import { Formatter } from '../formatter'
+import { ConcatFormatter } from '../formatter'
 import { Operation } from '../operation'
 import { OpenAPIObject } from '../typings/openapi'
 
@@ -10,7 +10,7 @@ const withoutEmptyLines = (s: string) => s.replace(/\n+/g, '\n')
 interface FetchClientFormatterOptions {
   serverUrl?: string
 }
-export class FetchClientFormatter extends Formatter<Operation> {
+export class FetchClientFormatter extends ConcatFormatter<Operation> {
   public url: string
   constructor(apiSchema?: OpenAPIObject, { serverUrl }: FetchClientFormatterOptions = {}) {
     super()

@@ -2,10 +2,10 @@ import { JSONSchema } from 'json-schema-ref-parser'
 import { camelCase, get, upperFirst } from 'lodash'
 
 import { compileSchema } from '../compile'
-import { Formatter } from '../formatter'
+import { ConcatFormatter } from '../formatter'
 import { Operation } from '../operation'
 
-export class ResultTypeFormatter extends Formatter<Operation> {
+export class ResultTypeFormatter extends ConcatFormatter<Operation> {
   public readonly contentType: string = 'application/json'
 
   public async render(operation: Operation) {

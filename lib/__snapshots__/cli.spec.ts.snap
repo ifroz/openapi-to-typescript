@@ -11,6 +11,7 @@ Commands:
 Options:
   --help         Show help                                             [boolean]
   --version      Show version number                                   [boolean]
+  --ejs          EJS template to use  [default: \\"./lib/formatters/fetch.ts.ejs\\"]
   --input, -i    File to read from                                    [required]
   --output, -o   Output name to write to
   --server, -s   Server URL to use (defaults to the first one in the OpenAPI

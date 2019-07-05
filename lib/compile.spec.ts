@@ -9,5 +9,6 @@ describe('compileSchema', () => {
     expect(compiled).toMatch(/\}\s*$/)
     expect(compiled).toContain('tag?: string')
     expect(compiled).not.toContain('$magic$')
+    expect(compiled).toContain('[k: string]: any')
   })
 })

@@ -17,6 +17,13 @@ export class Operation {
     this.pathName = pathName
   }
 
+  public get requestType() {
+    return this.name + 'Request'
+  }
+  public get responseType() {
+    return this.name + 'Result'
+  }
+
   public hasAnyParametersIn(parameterLocation: ParameterLocation) {
     return !!(this.operationObject.parameters || []).find(this.isParameterInLocation(parameterLocation))
   }

@@ -2,11 +2,11 @@ import { get } from 'lodash'
 
 import { JSONSchema } from 'json-schema-ref-parser'
 import { getSchemaName, getSchemaNameByRef } from '../compile'
-import { Formatter } from '../formatter'
+import { ConcatFormatter } from '../formatter'
 import { Operation } from '../operation'
 import { ParameterObject } from '../typings/openapi'
 
-export class RequestTypeFormatter extends Formatter<Operation> {
+export class RequestTypeFormatter extends ConcatFormatter<Operation> {
   public async render(operation: Operation) {
     const typeName = `${operation.name}Request`
     const parameters = operation.operationObject.parameters || []

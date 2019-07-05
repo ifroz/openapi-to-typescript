@@ -1,19 +1,20 @@
 import fs from 'fs'
+import path from 'path'
 import yargs from 'yargs'
 import { GenerateTypings } from '.'
-import { FetchClientFormatter } from './formatters'
+import { EjsFormatter } from './formatters'
 
 /* tslint:disable:no-console */
 export default yargs
   .command(['generate', '$0'], 'Write generated output to a file', {}, async (argv) => {
     const apiSchema = JSON.parse(fs.readFileSync(`${argv.input}`).toString())
-    const serverUrl: string|undefined = argv.server as any
+    const ejsPath = path.join(process.cwd(), `${argv.ejs}`)
+    const ejs = fs.readFileSync(ejsPath).toString()
+    const server: string|undefined = argv.server as any
     const generatedTypescript =
       await GenerateTypings(apiSchema, {
         operationFormatters: [
-          new FetchClientFormatter(apiSchema, {
-            serverUrl,
-          }),
+          new EjsFormatter(apiSchema, ejs, { server }),
         ],
       })
 
@@ -24,6 +25,10 @@ export default yargs
     } else {
       console.log(generatedTypescript)
     }
+  })
+  .option('ejs', {
+    describe: 'EJS template to use',
+    default: './lib/formatters/fetch.ts.ejs',
   })
   .option('input', {
     demandOption: true,
