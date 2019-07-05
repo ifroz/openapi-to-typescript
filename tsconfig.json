@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "baseUrl": ".",
     "esModuleInterop": true,
     "lib": [
@@ -12,6 +11,8 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "dist",
+    "declarationDir": "dist",
+    "declaration": true,
     "sourceMap": true,
     "strict": true,
     "target": "es2017"
