@@ -1,7 +1,7 @@
 import execa from 'execa'
 import fs from 'fs'
 import path from 'path'
-import { EjsFormatter, FetchClientFormatter } from './formatters'
+import { EjsFormatter } from './formatters'
 import { GenerateTypings, GenerateTypingsOptions } from './index'
 import { OpenAPIObject } from './typings/openapi'
 
@@ -57,18 +57,6 @@ describe('GenerateTypings', () => {
       const ejsTemplate = fs.readFileSync(path.join(__dirname, './formatters/fetch.ts.ejs')).toString()
       const options = {
         operationFormatters: [new EjsFormatter(schema, ejsTemplate)],
-      }
-      itShouldGenerateValidTypingsFromSchema(schema, options)
-
-      it('should generate client actions', async () => {
-        const generated = await GenerateTypings(schema, options)
-        expect(generated).toContain('method: "post"')
-      })
-    })
-
-    describe('FetchClientFormatter', () => {
-      const options = {
-        operationFormatters: [new FetchClientFormatter(schema)],
       }
       itShouldGenerateValidTypingsFromSchema(schema, options)
 
