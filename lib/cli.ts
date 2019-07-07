@@ -28,7 +28,7 @@ export default yargs
   })
   .option('ejs', {
     describe: 'EJS template to use',
-    default: './lib/formatters/fetch.ts.ejs',
+    default: './lib/templates/fetch.ts.ejs',
   })
   .option('input', {
     demandOption: true,

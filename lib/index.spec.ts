@@ -54,7 +54,7 @@ describe('GenerateTypings', () => {
     })
 
     describe('EjsFormatter with fetch.ts.ejs', () => {
-      const ejsTemplate = fs.readFileSync(path.join(__dirname, './formatters/fetch.ts.ejs')).toString()
+      const ejsTemplate = fs.readFileSync(path.join(__dirname, './templates/fetch.ts.ejs')).toString()
       const options = {
         operationFormatters: [new EjsFormatter(schema, ejsTemplate)],
       }
