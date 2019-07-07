@@ -58,7 +58,7 @@ export class FetchClientFormatter extends ConcatFormatter<Operation> {
     const queryParameterNames = operation.parameterNamesIn('query')
     const endpointURL = operation.hasAnyParametersIn('path') ?
       `API_URL + substitutePath(${JSON.stringify(operation.pathName)}, body)` :
-      'API_URL'
+      `API_URL + ${JSON.stringify(operation.pathName)}`
     return queryParameterNames.length ?
       `[${endpointURL}, encodeQuery(body, ${JSON.stringify(queryParameterNames)})].filter(x=>x).join('?')` :
       endpointURL

@@ -55,7 +55,7 @@ const API_URL = \\"http://petstore.swagger.io/api\\"
 
 export type FindPets = (payload: FindPetsRequest) => Promise<FindPetsResult>
 const FindPets = (body: FindPetsRequest, options: any):Promise<FindPetsResult> => {
-  return fetch([API_URL, encodeQuery(body, [\\"tags\\",\\"limit\\"])].filter(x=>x).join('?'), {
+  return fetch([API_URL + \\"/pets\\", encodeQuery(body, [\\"tags\\",\\"limit\\"])].filter(x=>x).join('?'), {
     ...options,
     method: \\"get\\",
     
@@ -64,7 +64,7 @@ const FindPets = (body: FindPetsRequest, options: any):Promise<FindPetsResult> =
 
 export type AddPet = (payload: AddPetRequest) => Promise<AddPetResult>
 const AddPet = (body: AddPetRequest, options: any):Promise<AddPetResult> => {
-  return fetch(API_URL, {
+  return fetch(API_URL + \\"/pets\\", {
     ...options,
     method: \\"post\\",
     body: JSON.stringify(body),
@@ -143,7 +143,7 @@ const API_URL = \\"http://petstore.swagger.io/api\\"
 export type FindPets = (payload: FindPetsRequest) => Promise<FindPetsResult>;
 const FindPets =
       async (body:FindPetsRequest, options:any):Promise<FindPetsResult> => {
-        return fetch([API_URL, encodeQuery(body, [\\"tags\\",\\"limit\\"])].filter(x=>x).join('?'), {
+        return fetch([API_URL + \\"/pets\\", encodeQuery(body, [\\"tags\\",\\"limit\\"])].filter(x=>x).join('?'), {
           ...options,
           method: \\"get\\",
           
@@ -152,7 +152,7 @@ const FindPets =
 export type AddPet = (payload: AddPetRequest) => Promise<AddPetResult>;
 const AddPet =
       async (body:AddPetRequest, options:any):Promise<AddPetResult> => {
-        return fetch(API_URL, {
+        return fetch(API_URL + \\"/pets\\", {
           ...options,
           method: \\"post\\",
           body: JSON.stringify(body),
