@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@types/yargs": "^15.0.0",
-    "json-schema-ref-parser": "^6.1.0",
+    "json-schema-ref-parser": "^7.1.1",
     "json-schema-to-typescript": "^6.1.0",
     "lodash": "^4.17.11",
     "source-map-support": "^0.5.12",
