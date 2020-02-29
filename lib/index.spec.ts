@@ -30,7 +30,7 @@ describe('GenerateTypings', () => {
     it('should output types for components.schemas', async () => {
       const generated = await GenerateTypings(schema)
       expect(generated).toContain('export interface Pet')
-      expect(generated).toContain('export type Pets = (Pet)[]')
+      expect(generated).toContain('export type Pets = Pet[]')
     })
   })
 

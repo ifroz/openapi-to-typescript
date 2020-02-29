@@ -31,7 +31,7 @@ export interface FindPetByIdRequest {
 export interface DeletePetRequest {
   id: number
 }
-export type FindPetsResult = (Pet)[];
+export type FindPetsResult = Pet[];
 
 export type FindPetsFallback = Error;
 
@@ -118,7 +118,7 @@ export interface FindPetByIdRequest {
 export interface DeletePetRequest {
   id: number
 }
-export type FindPetsResult = (Pet)[];
+export type FindPetsResult = Pet[];
 
 export type FindPetsFallback = Error;
 
@@ -143,7 +143,7 @@ exports[`GenerateTypings given the Petstore schema should match generated snapsh
   [k: string]: any;
 }
 
-export type Pets = (Pet)[];
+export type Pets = Pet[];
 
 export interface Error {
   code: number;
